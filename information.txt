@@ -1,0 +1,57 @@
+# Citizen
+
+## Dashboard View
+Welcome Message: "Hello, [User Name]!"
+My Impact Stats: Prominently displays their ecoPoints, Reports Submitted, and current Rank on the leaderboard.
+Quick Actions: A large, accessible "Report a New Incident" button.
+My Recent Reports: A list of their last 3-4 reports with their current status (e.g., "Pending Review," "Verified," "Action Taken").
+Leaderboard Snippet: Shows the top 3 users and the user's own position.
+
+APIS-
+1. /profile
+
+2. /report/new (Report an Incident)
+    Photo Upload: A simple interface to take a photo or upload from the gallery.
+    Geotagging: GPS location is automatically captured. Users can adjust the pin on a map for accuracy.
+    [OPTIONAL : TURN ON LOCATION]
+    Categorization: Simple buttons or icons to classify the incident (e.g., "Cutting," "Dumping," "Land Clearing," "Pollution").
+    Notes (Optional): A small text box for any additional details.
+
+3. /reports/my-history (My Reports)
+
+4. /leaderboard 
+
+------------------------------------------------------------------------------------
+
+# NGO
+They need powerful tools to manage, verify, and analyze incoming data from both citizens.
+
+Dashboard View
+total reports today, pending verification queue size, 
+Priority Queue: A list of reports that need urgent attention (e.g., a report within a critical hotspot).
+
+/satellite-view
+    => input image => get status of mongrove [AI MODEL]
+
+/verify
+    => Actions: They can "Verify," "Reject" (with a reason), or "Flag for Follow-up."
+    => Verification automatically assigns bonus ecoPoints to the citizen user
+    => Once a report is verified and deemed critical, the NGO user can escalate it into a formal "Alert" for the government dashboard.
+
+/analytics 
+    => Generate charts and graphs on incident trends
+
+------------------------------------------------------------------------------------
+
+# GOVERNMENT 
+
+Dashboard View
+    Active Alerts, Hotspot Map
+
+1. /alerts
+
+2. /case-management
+
+3. /analytics
+
+4. /create-ngo-user

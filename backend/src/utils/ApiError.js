@@ -9,7 +9,7 @@ class ApiError extends Error {
         this.errors = errors;
     }
 
-    toResponse() {
+    toResponse(res) {
         return ApiResponse.failure(this.message, this.statusCode).send(res);
     }
 }

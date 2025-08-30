@@ -9,8 +9,8 @@
 **/.astro/
 
 # ─── Environment files (React & Node) ─────────────────────
-**/.env
-**/.env.*.local
+# **/.env
+# **/.env.*.local
 
 # ─── Logs ────────────────────────────────────────────────
 **/logs

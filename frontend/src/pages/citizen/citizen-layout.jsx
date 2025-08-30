@@ -76,7 +76,7 @@ const CitizenLayout = () => {
         <nav className="flex items-center justify-between border-b shadow-sm px-3 py-2 bg-white">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-2 text-black"
+            className="p-3 text-black"
           >
             <FaBars />
           </button>
@@ -146,20 +146,19 @@ const CitizenLayout = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="md:ml-56 px-3 py-4">
+      {/* <div className="md:ml-56 px-3 py-4"> */}
+      <div className="md:ml-56 px-4 py-4 md:px-6 md:py-6">
         <Outlet />
       </div>
     </div>
   );
 };
-
 const sidebarItems = [
   { path: "/dashboard", label: "Dashboard", icon: FaTachometerAlt },
-  // { path: "/events", label: "All Events", icon: FaGlobe },
-  // { path: "/my-registrations", label: "Joined events", icon: FaList },
-  // { path: "/create-event", label: "Host Event", icon: FaPlusCircle },
-  // { path: "/my-events", label: "My Proposals", icon: FaCalendarCheck },
-  // { path: "/profile", label: "Profile", icon: FaUser },
+  { path: "/reports", label: "My Reports", icon: FaList },
+  { path: "/reports/new", label: "Report Incident", icon: FaPlusCircle },
+  { path: "/leaderboard", label: "Leaderboard", icon: FaGlobe },
+  { path: "/profile", label: "Profile", icon: FaUser },
 ];
 
 export default CitizenLayout;

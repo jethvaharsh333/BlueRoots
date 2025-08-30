@@ -7,7 +7,7 @@ const roleSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      enum: ["ADMIN", "MODERATOR", "USER", "GUEST"],
+      enum: ["GOVERNMENT", "NGO", "CITIZEN"],
     },
   },
   { timestamps: true }

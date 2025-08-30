@@ -6,10 +6,10 @@ import App from './App.jsx'
 import { ToastProvider } from './components/providers/toast-provider.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
     <ToastProvider />
     <App />
     </BrowserRouter>
-  </StrictMode>,
+  // </StrictMode>,
 )

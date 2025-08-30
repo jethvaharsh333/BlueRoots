@@ -127,6 +127,9 @@ const CitizenLayout = () => {
       navigate("/login");
   }
 
+  const email = localStorage.getItem('email');
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* DESKTOP SIDEBAR */}
@@ -390,7 +393,7 @@ const CitizenLayout = () => {
                       <span className="text-white font-semibold text-sm">JD</span>
                     </motion.div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">John Doe</p>
+                      <p className="font-medium text-gray-900 text-sm">({email})</p>
                       <p className="text-gray-500 text-xs">({role})</p>
                     </div>
                   </motion.div>

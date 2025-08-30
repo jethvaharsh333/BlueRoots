@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../../constant";
 import axiosClient from "../../utils/axiosClient";
+import { Link } from "react-router-dom";
 
 const Reports = () => {
   const [reports, setReports] = useState([]);
@@ -121,7 +122,7 @@ const Reports = () => {
   // Empty state
   if (reports.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+      <div className="min-h-screen p-4">
         <div className="w-full max-w-7xl mx-auto">
           <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl overflow-hidden border border-white/20 animate-fadeIn">
             {/* Header */}
@@ -138,9 +139,12 @@ const Reports = () => {
               <div className="text-8xl mb-6 animate-bounceIn">📝</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">No Reports Yet</h2>
               <p className="text-gray-600 mb-8 text-lg">You haven't created any reports yet. Start by reporting an environmental issue!</p>
-              <button className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all hover:scale-102 shadow-lg hover:shadow-xl">
+              <Link to="/reports/new">
+              <button className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all hover:scale-102 shadow-lg hover:shadow-xl"
+                >
                 🚀 Create First Report
               </button>
+                  </Link>
             </div>
           </div>
         </div>

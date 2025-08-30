@@ -9,8 +9,8 @@ router.use(authenticator());
 router.route('/create').post(authenticator(['CITIZEN']), asyncHandler(createReport));
 router.route('/my').get(authenticator(['CITIZEN']), asyncHandler(getMyReports));
 
-router.route('/all').get(authenticator(['NGO']), asyncHandler(getAllReports));
-router.route('/:id').get(authenticator(['NGO']), asyncHandler(getReportById));
+router.route('/all').get(authenticator(['NGO','GOVERNMENT']), asyncHandler(getAllReports));
+router.route('/:id').get(authenticator(), asyncHandler(getReportById));
 router.route('/verify/:id').put(authenticator(['NGO']), asyncHandler(verifyReport));
 
 export default router;

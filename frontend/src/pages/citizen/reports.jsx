@@ -5,28 +5,28 @@ import axiosClient from "../../utils/axiosClient";
 import { Link } from "react-router-dom";
 
 const Reports = () => {
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const res = await axiosClient.get(`${BACKEND_URL}/reports/my`);
-        if (res.data.success) {
-          setReports(res.data.data);
-        } else {
-          setError("Failed to fetch reports");
-        }
-      } catch (err) {
-        setError("Something went wrong!");
-      } finally {
-        setLoading(false);
-      }
-    };
+    useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const res = await axiosClient.get(`${BACKEND_URL}/reports/my`);
+                if (res.data.success) {
+                    setReports(res.data.data);
+                } else {
+                    setError("Failed to fetch reports");
+                }
+            } catch (err) {
+                setError("Something went wrong!");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    fetchReports();
-  }, []);
+        fetchReports();
+    }, []);
 
   // Enhanced status badge component
   const getStatusBadge = (status) => {

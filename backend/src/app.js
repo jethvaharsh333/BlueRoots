@@ -41,12 +41,16 @@ app.use("/api/v1/reports", reportRoutes);
 import leaderboardRoutes from "./routes/leaderboard.routes.js";
 app.use("/api/v1/leaderboard", leaderboardRoutes);
 
+import adminRoutes from "./routes/admin.routes.js";
+app.use("/api/v1/admin", adminRoutes);
+
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
 app.use(errorHandler);
 
-import  { seedRoles } from "./utils/seedRoles.js";
-(async () => {
-  await seedRoles();
-})();
+// import  { seedGovernmentUsers, seedRoles } from "./utils/seedRoles.js";
+// (async () => {
+//   await seedRoles();
+//   await seedGovernmentUsers();
+// })();
 
 export {app};

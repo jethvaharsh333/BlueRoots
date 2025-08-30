@@ -22,7 +22,9 @@ const errorHandler = (error, req, res, next) => {
     );
   }
   
-  return res.json(apiError.toResponse());
+  return res.json(apiError.toResponse(res));
+    // return apiError.toResponse(res);
+
 };
 
 export { errorHandler };

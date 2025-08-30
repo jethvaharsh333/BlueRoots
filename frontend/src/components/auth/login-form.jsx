@@ -35,8 +35,17 @@ const LoginForm = () => {
             console.log(res);
             console.log()
             localStorage.setItem("role", res.data.data.role);
+            
             toast.success(res.data.message);
-            navigate("/dashboard");
+            const role = res.data.data.role; 
+
+            if (role === "CITIZEN") {
+                navigate("/dashboard");
+            } else if (role === "GOVERNMENT") {
+                navigate("/govt/dashboard");
+            } else if (role === "NGO") {
+                navigate("/ngo/dashboard");
+            }
         } catch (err) {
             console.log(err.response);
             toast.error(err.response.data.message);

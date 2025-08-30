@@ -9,7 +9,11 @@ import GovtAlert from "../pages/government/govt-alerts";
 import GovtAnalytics from "../pages/government/govt-analytics";
 import GovtDashboard from "../pages/government/govt-dashboard";
 import Users from "../pages/government/users";
+import NgoAnalytics from "../pages/ngo/ngo-analytics";
+import NgoCreateAlert from "../pages/ngo/ngo-create-alert";
 import NGODashboard from "../pages/ngo/ngo-dashboard";
+import NgoSatelliteReports from "../pages/ngo/ngo-satellite-view-reports";
+import NgoVerify from "../pages/ngo/ngo-verify";
 
 
 export const citizenRoutes = [
@@ -23,8 +27,12 @@ export const citizenRoutes = [
 
 export const ngoRoutes = [
     { path: "/ngo/dashboard", element: <NGODashboard/> },
-    // { path: "/satellite-view-report", element: <SatelliteViewReport /> },
+    {path:"/ngo/satellite-view-report",element:<NgoSatelliteReports/>},
     // { path: "/reports", element: <Reports /> },
+    {path:"/ngo/verify", element:<NgoVerify/>},
+    {path:"/ngo/analytics",element:<NgoAnalytics/>},
+    {path:"/ngo/create-alert",element:<NgoCreateAlert/>},
+    {path:"/ngo/reports",element:<NgoCreateAlert/>},
     // { path: "/verify", element: <Verify /> },
     // { path: "/analytics", element: <Analytics /> },
 ];

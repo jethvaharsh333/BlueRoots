@@ -4,8 +4,8 @@ import { PublicRoutes } from './public-routes.jsx';
 import { citizenRoutes, governmentRoutes, ngoRoutes } from './private-routes.jsx';
 import PrivateRoute from '../components/providers/private-routes.jsx';
 import CitizenLayout from '../pages/citizen/citizen-layout.jsx';
-import NGOLayout from '../pages/ngo/ngo-layout.jsx';
 import GovtLayout from '../pages/government/govt-layout.jsx';
+import NgoLayout from '../pages/ngo/ngo-layout.jsx';
 
 const AppRoutes = () => {
     return (
@@ -33,7 +33,7 @@ const AppRoutes = () => {
             <Route 
                 element={
                     <PrivateRoute allowedRoles={["NGO"]}>
-                        <NGOLayout />
+                        <NgoLayout />
                     </PrivateRoute>
                 }
             >

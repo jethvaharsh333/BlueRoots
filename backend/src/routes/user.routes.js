@@ -8,7 +8,7 @@ router.use(authenticator());
 
 router.route("/current").get(asyncHandler(getCurrentUser));
 router.route("/logout").post(asyncHandler(logout));
-router.route("/update-profile").post(asyncHandler(updateProfile));
-router.route("/update-password").post(asyncHandler(updatePassword));
+router.route("/update-profile").put(asyncHandler(updateProfile));
+router.route("/update-password").put(asyncHandler(updatePassword));
 
 export default router;

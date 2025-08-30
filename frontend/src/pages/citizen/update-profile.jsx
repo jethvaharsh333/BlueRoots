@@ -28,12 +28,14 @@ const UpdateProfile = ({ user, setUser, onCancel, onSave }) => {
         BACKEND_URL + "/user/update-profile",
         formData
       );
+        console.log(res.data);
       toast.success(res.data.message);
 
       // update parent state
       setUser(res.data.data);
       if (onSave) onSave();
     } catch (error) {
+        console.error(error);
       toast.error(error.response?.data?.message || "Update failed");
     }
   };

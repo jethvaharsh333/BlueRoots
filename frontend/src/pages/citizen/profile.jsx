@@ -2,24 +2,27 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constant";
 import axiosClient from "../../utils/axiosClient";
 import toast from "react-hot-toast";
-import { UserRound, Pencil } from "lucide-react";
+import { UserRound, Pencil, KeyRound } from "lucide-react";
 import { IconBadge } from "../../components/common/icon-badge";
 import UpdateProfile from "./update-profile";
+import UpdatePassword from "./update-password"; // ✅ import new component
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false); // ✅ new state
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
         const res = await axiosClient.get(BACKEND_URL + "/user/current");
-        console.log(res.data.data);
-        setUser(res.data.data); // ✅ backend returns user directly in `data`
+        console.log(res.data);
+        setUser(res.data.data);
         toast.success(res.data.message);
       } catch (error) {
+        console.error(error);
         toast.error(error.response?.data?.message || "Something went wrong");
       } finally {
         setLoading(false);
@@ -53,7 +56,7 @@ const Profile = () => {
           </div>
 
           {/* Info Grid */}
-          {!isEditing ? (
+          {!isEditing && !isUpdatingPassword ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
                 <div>
@@ -86,21 +89,36 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* Edit Button */}
-              <button
-                onClick={() => setIsEditing(true)}
-                className="mt-6 flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-              >
-                <Pencil size={18} />
-                Edit Profile
-              </button>
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                >
+                  <Pencil size={18} />
+                  Edit Profile
+                </button>
+
+                <button
+                  onClick={() => setIsUpdatingPassword(true)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                >
+                  <KeyRound size={18} />
+                  Update Password
+                </button>
+              </div>
             </>
-          ) : (
+          ) : isEditing ? (
             <UpdateProfile
               user={user}
               setUser={setUser}
               onCancel={() => setIsEditing(false)}
               onSave={() => setIsEditing(false)}
+            />
+          ) : (
+            <UpdatePassword
+              onCancel={() => setIsUpdatingPassword(false)}
+              onSave={() => setIsUpdatingPassword(false)}
             />
           )}
         </div>

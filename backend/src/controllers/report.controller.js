@@ -1,16 +1,18 @@
 import { Report } from '../models/report.model.js';
-import User from '../models/userModel.js';
+import { User } from '../models/user.model.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
-import { HTTPSTATUS } from '../utils/HttpStatus.js';
+import { HTTPSTATUS } from "../config/http.config.js";
 
 const createReport = async (req, res) => {
     const { category, notes, longitude, latitude, images } = req.body;
+    console.log( category, notes, longitude, latitude, images );
+
     
     if (!category || !longitude || !latitude) {
         return ApiResponse.failure("Category and location coordinates are required.", HTTPSTATUS.BAD_REQUEST).send(res);
     }
 
-    if (!req.files || req.files.length === 0) {
+    if (!images || images.length === 0) {
         return ApiResponse.failure("At least one image is required.", HTTPSTATUS.BAD_REQUEST).send(res);
     }
 

@@ -2,7 +2,9 @@ import CitizenDashboard from "../pages/citizen/citizen-dashboard";
 import Leaderboard from "../pages/citizen/leaderboard";
 import NewReport from "../pages/citizen/new-report";
 import Profile from "../pages/citizen/profile";
+import ReportDetail from "../pages/citizen/report-detail";
 import Reports from "../pages/citizen/reports";
+import GovtDashboard from "../pages/goverment/govt-dashboard";
 
 
 export const citizenRoutes = [
@@ -11,6 +13,7 @@ export const citizenRoutes = [
     { path: "/reports", element: <Reports /> },
     { path: "/reports/new", element: <NewReport /> },
     { path: "/leaderboard", element: <Leaderboard /> },
+    {path: "/reports/:id", element: <ReportDetail />},
 ];
 
 export const ngoRoutes = [
@@ -22,6 +25,7 @@ export const ngoRoutes = [
 ];
 
 export const governmentRoutes = [
+    {path: "/govt/dashboard", element: <GovtDashboard />},
     // { path: "/admin/dashboard", element: <Dashboard /> },
     // { path: "/users", element: <Users /> },
     // { path: "/setting", element: <Setting /> },

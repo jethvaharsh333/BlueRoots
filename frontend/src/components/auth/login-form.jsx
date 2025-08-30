@@ -32,11 +32,19 @@ const LoginForm = () => {
         try {
             setLoading(true);
             const res = await axiosClient.post(BACKEND_URL + "/auth/login", data);
-            console.log(res);
-            console.log()
             localStorage.setItem("role", res.data.data.role);
+            console.log(res);
             toast.success(res.data.message);
-            navigate("/dashboard");
+            const role = res.data.data.role; 
+
+            if (role === "CITIZEN") {
+                navigate("/dashboard");
+            } else if (role === "GOVERNMENT") {
+                navigate("/govt/dashboard");
+            } else if (role === "NGO") {
+                navigate("/ngo/dashboard");
+            }
+
         } catch (err) {
             console.log(err.response);
             toast.error(err.response.data.message);
@@ -80,7 +88,7 @@ const LoginForm = () => {
                     className="text-xs font-medium text-slate-800 hover:underline"
                 >
                     Forgot password?
-                </Link>            
+                </Link>
             </div>
 
             <Button disabled={isSubmitting} type="submit" className="bg-black hover:bg-opacity-95">

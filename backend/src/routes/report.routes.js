@@ -9,7 +9,11 @@ router.use(authenticator());
 router.route('/create').post(authenticator(['CITIZEN']), asyncHandler(createReport));
 router.route('/my').get(authenticator(['CITIZEN']), asyncHandler(getMyReports));
 
+<<<<<<< Updated upstream
 router.route('/all').get(authenticator(['NGO','GOVERNMENT']), asyncHandler(getAllReports));
+=======
+router.route('/all').get(authenticator(['NGO']), asyncHandler(getAllReports));
+>>>>>>> Stashed changes
 router.route('/:id').get(authenticator(), asyncHandler(getReportById));
 router.route('/verify/:id').put(authenticator(['NGO']), asyncHandler(verifyReport));
 

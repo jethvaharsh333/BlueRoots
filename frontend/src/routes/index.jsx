@@ -3,10 +3,13 @@ import { PublicRoutes } from './public-routes.jsx';
 import { citizenRoutes, governmentRoutes, ngoRoutes } from './private-routes.jsx';
 import PrivateRoute from '../components/providers/private-routes.jsx';
 import CitizenLayout from '../pages/citizen/citizen-layout.jsx';
+import NGOLayout from '../pages/ngo/ngo-layout.jsx';
+import GovtLayout from '../pages/goverment/govt-layout.jsx';
 
 const AppRoutes = () => {
     return (
         <Routes>
+            {/* Public Routes */}
             {PublicRoutes.map((route, index) => (
                 <Route
                     key={index}
@@ -15,6 +18,7 @@ const AppRoutes = () => {
                 />
             ))}
 
+            {/* Citizen Routes */}
             <Route element={<CitizenLayout />}>
                 {citizenRoutes.map((route, index) => (
                     <Route
@@ -29,32 +33,38 @@ const AppRoutes = () => {
                 ))}
             </Route>
 
-            {ngoRoutes.map((route, index) => {
-                <Route
-                    key={index}
-                    path={route.path}
-                    element={
-                        <PrivateRoute allowedRoles={["NGO"]}>
-                            {route.element}
-                        </PrivateRoute>
-                    }
-                />
-            })}
+            {/* NGO Routes */}
+            <Route element={<NGOLayout />}>
+                {ngoRoutes.map((route, index) => (
+                    <Route
+                        key={index}
+                        path={route.path}
+                        element={
+                            <PrivateRoute allowedRoles={["NGO"]}>
+                                {route.element}
+                            </PrivateRoute>
+                        }
+                    />
+                ))}
+            </Route>
 
-            {governmentRoutes.map((route, index) => {
-                <Route
-                    key={index}
-                    path={route.path}
-                    element={
-                        <PrivateRoute allowedRoles={["GOVERNMENT"]}>
-                            {route.element}
-                        </PrivateRoute>
-                    }
-                />
-            })}
-
+            {/* Government Routes */}
+            <Route element={<GovtLayout />}>
+                {governmentRoutes.map((route, index) => (
+                    <Route
+                        key={index}
+                        path={route.path}
+                        element={
+                            <PrivateRoute allowedRoles={["GOVERNMENT"]}>
+                                {route.element}
+                            </PrivateRoute>
+                        }
+                    />
+                ))}
+            </Route>
+            <Route path="/unauthorized" element={<h1>403 - Unauthorized</h1>} />
         </Routes>
     );
-}
+};
 
 export default AppRoutes;

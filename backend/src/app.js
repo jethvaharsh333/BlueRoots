@@ -38,6 +38,9 @@ app.use("/api/v1/config", configRoutes);
 import reportRoutes from "./routes/report.routes.js";
 app.use("/api/v1/reports", reportRoutes);
 
+import leaderboardRoutes from "./routes/leaderboard.routes.js";
+app.use("/api/v1/leaderboard", leaderboardRoutes);
+
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
 app.use(errorHandler);
 

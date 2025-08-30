@@ -15,6 +15,7 @@ const authenticator = (roles = []) => {
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
+      console.log("----- 1.")
     if (!token) {
       return ApiResponse.failure("Authentication failed. Please login again.", HTTPSTATUS.UNAUTHORIZED).send(res);
     }
@@ -28,6 +29,7 @@ const authenticator = (roles = []) => {
     }
 
     const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
+    console.log("----- 2.")
     if (!user) {
       return ApiResponse.failure("Authentication failed. Please login again.", HTTPSTATUS.UNAUTHORIZED).send(res);
       // throw new UnauthorizedException("Authentication failed. Please login again.");

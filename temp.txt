@@ -12,3 +12,4 @@ git push -u origin working
 
 https://cloud.mongodb.com/v2/68aede2ec1929c6348ad9fa1#/metrics/replicaSet/68aede8c2b389b04802fa77f/explorer/db_v0/users/find
 
+git checkout -b master

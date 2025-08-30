@@ -1,6 +1,8 @@
 import { HTTPSTATUS } from "../config/http.config.js";
 import { generateAccessAndRefereshToken } from "../helpers/generate-access-and-referesh-token.js";
 import { generateVerificationToken } from "../helpers/generate-verification-token.js";
+import { Role } from "../models/role.model.js";
+import { UserRole } from "../models/user-role.model.js";
 import { User } from "../models/user.model.js";
 import { Verification } from "../models/verification.model.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -30,6 +32,17 @@ const register = async (req, res) => {
         accountType: "default",
     });
     await user.save({ session: req.dbSession });
+
+    const citizenRole = await Role.findOne({ roleName: "CITIZEN" });
+    if (!citizenRole) {
+        return ApiResponse.failure("Default role not found. Please seed roles first.", HTTPSTATUS.INTERNAL_SERVER_ERROR).send(res);
+    }
+
+    const userRole = new UserRole({
+        userId: user._id,
+        roleId: citizenRole._id,
+    });
+    await userRole.save({ session: req.dbSession });
 
     const verificationToken = await generateVerificationToken(email, req.dbSession);
 
@@ -138,6 +151,9 @@ const login = async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
+    const roles = await UserRole.findOne({userId: user._id}).populate("roleId");
+    const role = roles?.roleId?.roleName || "GUEST";
+
     const refreshTokenOptions = {
         httpOnly: true,
         secure: false,
@@ -155,7 +171,7 @@ const login = async (req, res) => {
         .cookie("refreshToken", refreshToken, refreshTokenOptions)
         .cookie("accessToken", accessToken, accessTokenOptions)
         .json(ApiResponse.success(
-            { user: loggedInUser }, "Login Successfull", HTTPSTATUS.OK
+            { user: loggedInUser, role: role }, "Login Successfull", HTTPSTATUS.OK
         ));
 }
 

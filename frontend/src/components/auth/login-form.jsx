@@ -33,6 +33,8 @@ const LoginForm = () => {
             setLoading(true);
             const res = await axiosClient.post(BACKEND_URL + "/auth/login", data);
             console.log(res);
+            console.log()
+            localStorage.setItem("role", res.data.data.role);
             toast.success(res.data.message);
             navigate("/dashboard");
         } catch (err) {

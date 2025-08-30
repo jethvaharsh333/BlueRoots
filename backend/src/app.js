@@ -32,4 +32,9 @@ app.use("/api/v1/auth", authRoutes);
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
 app.use(errorHandler);
 
+import  { seedRoles } from "./utils/seedRoles.js";
+(async () => {
+  await seedRoles();
+})();
+
 export {app};

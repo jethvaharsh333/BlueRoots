@@ -1,4 +1,8 @@
 import CitizenDashboard from "../pages/citizen/citizen-dashboard";
+import Leaderboard from "../pages/citizen/leaderboard";
+import NewReport from "../pages/citizen/new-report";
+import Profile from "../pages/citizen/profile";
+import Reports from "../pages/citizen/reports";
 
 
 export const citizenRoutes = [

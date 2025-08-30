@@ -1,10 +1,9 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
-  FaGlobe,
-  FaList,
   FaPlusCircle,
-  FaCalendarCheck,
+  FaList,
+  FaGlobe,
   FaUser,
   FaSignOutAlt,
   FaBars,
@@ -16,7 +15,7 @@ const CitizenLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear token, role etc. here
+    // Clear auth details
     localStorage.clear();
     setIsMobileMenuOpen(false);
     navigate("/login");
@@ -29,10 +28,7 @@ const CitizenLayout = () => {
         {/* Logo */}
         <div className="border-b shadow-sm w-full px-4 py-3 bg-white">
           <NavLink to="/dashboard">
-            <img
-              src="/assets/gateway-company-black-logo.svg"
-              alt="Gateway group"
-            />
+            <h2 className="text-green-900 font-bold text-lg">Citizen Portal</h2>
           </NavLink>
         </div>
 
@@ -45,11 +41,14 @@ const CitizenLayout = () => {
                 <li key={i}>
                   <NavLink
                     to={item.path}
+                    end // ensures "Dashboard" doesn't stay active when inside reports
                     className={({ isActive }) =>
                       `flex items-center gap-2 px-3 py-2 rounded-lg transition-all 
-                       ${isActive
-                         ? "bg-green-900 text-white"
-                         : "text-black hover:bg-green-200/40"}`
+                       ${
+                         isActive
+                           ? "bg-green-900 text-white"
+                           : "text-black hover:bg-green-200/40"
+                       }`
                     }
                   >
                     <Icon />
@@ -81,15 +80,11 @@ const CitizenLayout = () => {
             <FaBars />
           </button>
           <NavLink to="/dashboard">
-            <img
-              src="/assets/gateway-company-black-logo.svg"
-              alt="Gateway group"
-              className="h-9"
-            />
+            <h2 className="text-green-900 font-bold">Citizen</h2>
           </NavLink>
         </nav>
 
-        {/* Mobile Drawer (Offcanvas style) */}
+        {/* Mobile Drawer */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-50 flex">
             {/* Overlay */}
@@ -117,12 +112,15 @@ const CitizenLayout = () => {
                     <NavLink
                       key={i}
                       to={item.path}
+                      end
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={({ isActive }) =>
                         `flex items-center gap-2 px-3 py-2 rounded-lg transition-all 
-                         ${isActive
-                           ? "bg-green-900 text-white"
-                           : "text-black hover:bg-green-200/40"}`
+                         ${
+                           isActive
+                             ? "bg-green-900 text-white"
+                             : "text-black hover:bg-green-200/40"
+                         }`
                       }
                     >
                       <Icon />
@@ -155,11 +153,10 @@ const CitizenLayout = () => {
 
 const sidebarItems = [
   { path: "/dashboard", label: "Dashboard", icon: FaTachometerAlt },
-  // { path: "/events", label: "All Events", icon: FaGlobe },
-  // { path: "/my-registrations", label: "Joined events", icon: FaList },
-  // { path: "/create-event", label: "Host Event", icon: FaPlusCircle },
-  // { path: "/my-events", label: "My Proposals", icon: FaCalendarCheck },
-  // { path: "/profile", label: "Profile", icon: FaUser },
+  { path: "/reports/new", label: "Report Incident", icon: FaPlusCircle },
+  { path: "/reports", label: "My Reports", icon: FaList },
+  { path: "/leaderboard", label: "Leaderboard", icon: FaGlobe },
+  { path: "/profile", label: "Profile", icon: FaUser },
 ];
 
 export default CitizenLayout;

@@ -16,7 +16,7 @@ const DashboardIcon = () => <FaTachometerAlt className="w-5 h-5" />;
 const ReportIcon = () => <FaPlusCircle className="w-5 h-5" />;
 const ListIcon = () => <FaList className="w-5 h-5" />;
 const LeaderboardIcon = () => <FaGlobe className="w-5 h-5" />;
-const ProfileIcon = () => <FaUser className="w-5 h-5" />;
+const ProfileIcon = () => <FaUser className="w-3 h-6" />;
 const LogoutIcon = () => <FaSignOutAlt className="w-5 h-5" />;
 const MenuIcon = () => <FaBars className="w-6 h-6" />;
 
@@ -119,7 +119,6 @@ const CitizenLayout = () => {
     { path: "/reports/new", label: "Report Incident", icon: ReportIcon },
     { path: "/reports", label: "My Reports", icon: ListIcon },
     { path: "/leaderboard", label: "Leaderboard", icon: LeaderboardIcon },
-    { path: "/profile", label: "Profile", icon: ProfileIcon },
   ];
 
   const role = localStorage.getItem('role');
@@ -174,6 +173,7 @@ const CitizenLayout = () => {
                 >
                   <NavLink
                     to={item.path}
+                    end
                     className={({ isActive }) =>
                       `group flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 cursor-pointer
                        ${isActive
@@ -203,48 +203,52 @@ const CitizenLayout = () => {
         </div>
 
         {/* User Profile & Logout */}
-        <motion.div 
-          className="p-4 border-t border-gray-100"
-          variants={itemVariants}
-        >
-          <motion.div 
-            className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 mb-3"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <motion.div 
-              className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center"
-              whileHover={{ rotate: 5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <span className="text-white font-semibold text-sm">JD</span>
-            </motion.div>
-            <div className="flex-1">
-              <p className="font-medium text-gray-900 text-sm">John Doe</p>
-              <p className="text-gray-500 text-xs">{role}</p>
-            </div>
-          </motion.div>
-          
-          <motion.button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-200 group"
-            whileHover={{ x: 4 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <LogoutIcon />
-            <span className="font-medium">Logout</span>
-            <motion.div 
-              className="ml-auto opacity-0 group-hover:opacity-100"
-              initial={{ x: -10 }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </motion.div>
-          </motion.button>
-        </motion.div>
+<motion.div 
+  className="p-4 border-t border-gray-100"
+  variants={itemVariants}
+>
+  {/* Profile Link - Clicking this will navigate to /profile */}
+  <motion.div 
+    className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 mb-3 cursor-pointer"
+    whileHover={{ scale: 1.02 }}
+    transition={{ duration: 0.2 }}
+    onClick={() => navigate('/profile')} // Add click handler to navigate to profile
+  >
+    <motion.div 
+      className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center"
+      whileHover={{ rotate: 5 }}
+      transition={{ duration: 0.2 }}
+    >
+      {/* Use the ProfileIcon component instead of faUser */}
+      <ProfileIcon />
+    </motion.div>
+    <div className="flex-1">
+      <p className="font-medium text-gray-900 text-sm">John Doe</p>
+      <p className="text-gray-500 text-xs">{role}</p>
+    </div>
+        
+  </motion.div>
+  
+  <motion.button
+    onClick={handleLogout}
+    className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-200 group"
+    whileHover={{ x: 4 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <LogoutIcon />
+    <span className="font-medium">Logout</span>
+    <motion.div 
+      className="ml-auto opacity-0 group-hover:opacity-100"
+      initial={{ x: -10 }}
+      whileHover={{ x: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </motion.div>
+  </motion.button>
+</motion.div>
       </motion.div>
 
       {/* MOBILE NAVBAR */}
@@ -429,7 +433,6 @@ const sidebarItems = [
   { path: "/reports/new", label: "Report Incident", icon: FaPlusCircle },
   { path: "/reports", label: "My Reports", icon: FaList },
   { path: "/leaderboard", label: "Leaderboard", icon: FaGlobe },
-  { path: "/profile", label: "Profile", icon: FaUser },
 ];
 
 export default CitizenLayout;

@@ -424,5 +424,12 @@ const CitizenLayout = () => {
     </div>
   );
 };
+const sidebarItems = [
+  { path: "/dashboard", label: "Dashboard", icon: FaTachometerAlt },
+  { path: "/reports/new", label: "Report Incident", icon: FaPlusCircle },
+  { path: "/reports", label: "My Reports", icon: FaList },
+  { path: "/leaderboard", label: "Leaderboard", icon: FaGlobe },
+  { path: "/profile", label: "Profile", icon: FaUser },
+];
 
 export default CitizenLayout;

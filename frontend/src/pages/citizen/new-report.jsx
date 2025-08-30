@@ -234,22 +234,20 @@ const getCurrentLocation = () => {
         step="any"
         name="latitude"
         value={formData.latitude}
-        onChange={handleChange}
-        placeholder="Latitude"
-        className="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none focus:scale-101"
+        placeholder="Latitude (use Get Location button)"
+        className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 cursor-not-allowed transition-all outline-none"
         required
-        disabled={isLoadingLocation}
+        readOnly
       />
       <input
         type="number"
         step="any"
         name="longitude"
         value={formData.longitude}
-        onChange={handleChange}
-        placeholder="Longitude"
-        className="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none focus:scale-101"
+        placeholder="Longitude (use Get Location button)"
+        className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 cursor-not-allowed transition-all outline-none"
         required
-        disabled={isLoadingLocation}
+        readOnly
       />
     </div>
     <button

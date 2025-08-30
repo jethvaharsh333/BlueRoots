@@ -3,6 +3,7 @@ import Leaderboard from "../pages/citizen/leaderboard";
 import NewReport from "../pages/citizen/new-report";
 import Profile from "../pages/citizen/profile";
 import Reports from "../pages/citizen/reports";
+import ChatBot from "../pages/common/chat-bot";
 
 
 export const citizenRoutes = [
@@ -11,6 +12,7 @@ export const citizenRoutes = [
     { path: "/reports", element: <Reports /> },
     { path: "/reports/new", element: <NewReport /> },
     { path: "/leaderboard", element: <Leaderboard /> },
+    { path: "/chat-bot", element: <ChatBot /> },
 ];
 
 export const ngoRoutes = [

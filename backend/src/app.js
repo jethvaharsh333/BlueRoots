@@ -32,6 +32,9 @@ app.use("/api/v1/auth", authRoutes);
 import userRoutes from "./routes/user.routes.js";
 app.use("/api/v1/user", userRoutes);
 
+import configRoutes from "./routes/config.routes.js";
+app.use("/api/v1/config", configRoutes);
+
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
 app.use(errorHandler);
 

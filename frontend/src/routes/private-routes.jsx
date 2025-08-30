@@ -4,7 +4,11 @@ import NewReport from "../pages/citizen/new-report";
 import Profile from "../pages/citizen/profile";
 import ReportDetail from "../pages/citizen/report-detail";
 import Reports from "../pages/citizen/reports";
+import GovtAddUser from "../pages/government/govt-add-user";
+import GovtAlert from "../pages/government/govt-alerts";
+import GovtAnalytics from "../pages/government/govt-analytics";
 import GovtDashboard from "../pages/government/govt-dashboard";
+import Users from "../pages/government/users";
 import NGODashboard from "../pages/ngo/ngo-dashboard";
 
 
@@ -27,6 +31,9 @@ export const ngoRoutes = [
 
 export const governmentRoutes = [
     { path: "/govt/dashboard", element: <GovtDashboard /> },
-    // { path: "/users", element: <Users /> },
+    {path:"/govt/add-user",element:<GovtAddUser/>},
+    {path:"/govt/analytics",element:<GovtAnalytics/>},
+    {path:"/govt/alerts",element:<GovtAlert/>},
+    {path:"/govt/users",element:<Users/>},
     // { path: "/setting", element: <Setting /> },
 ];

@@ -1,7 +1,8 @@
 const GovtDashboard = () => {
     return (  
         <>
-        Govt das</>
+            <h1>Government Dashboard</h1>
+       </>
     );
 }
  

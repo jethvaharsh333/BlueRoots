@@ -29,6 +29,9 @@ app.use(transactionControl);
 import authRoutes from "./routes/auth.routes.js";
 app.use("/api/v1/auth", authRoutes);
 
+import userRoutes from "./routes/user.routes.js";
+app.use("/api/v1/user", userRoutes);
+
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
 app.use(errorHandler);
 

@@ -1,3 +1,4 @@
+import { HTTPSTATUS } from "../config/http.config.js";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -49,18 +50,30 @@ const updateProfile = async(req, res) => {
       }
     }
 
-    const updateData = {};
-    if (username) updateData.username = username.trim();
-    if (firstName) updateData.firstName = firstName.trim();
-    if (lastName) updateData.lastName = lastName.trim();
-    if (dateOfBirth) updateData.dateOfBirth = new Date(dateOfBirth);
-    if (gender) updateData.gender = gender;
+    if (dateOfBirth) {
+      const dob = new Date(dateOfBirth);
+      if (isNaN(dob.getTime())) {
+        return ApiResponse.failure("Invalid date of birth", 400).send(res);
+      }
+      const today = new Date();
+      if (dob >= today) {
+        return ApiResponse.failure("Date of birth must be in the past", 400).send(res);
+      }
+    }
 
-    // update and return new user data
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $set: updateData },
-      { new: true, runValidators: true, context: "query" }
+      {
+        $set: {
+          ...(username && { username }),
+          ...(firstName && { firstName }),
+          ...(lastName && { lastName }),
+          ...(dateOfBirth && { dateOfBirth }),
+          ...(gender && { gender }),
+        },
+      },
+      { new: true, runValidators: true, session: req.dbSession }
     ).select("-password -refreshToken"); // hide sensitive fields
 
     if (!updatedUser) {
@@ -68,14 +81,13 @@ const updateProfile = async(req, res) => {
     }
 
     return ApiResponse.success(updatedUser, "Profile updated successfully").send(res);
-  
 }
 
 const updatePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   if (!oldPassword || !newPassword) {
-    return ApiResponse.error(
+    return ApiResponse.failure(
       "Old and new password are required.",
       HTTPSTATUS.BAD_REQUEST
     ).send(res);
@@ -83,16 +95,15 @@ const updatePassword = async (req, res) => {
 
   const user = await User.findById(req.user._id);
   if (!user) {
-    return ApiResponse.error(
+    return ApiResponse.failure(
       "User not found.",
       HTTPSTATUS.NOT_FOUND
     ).send(res);
   }
 
-  // ✅ Verify old password
   const isMatch = await user.isPasswordCorrect(oldPassword);
   if (!isMatch) {
-    return ApiResponse.error(
+    return ApiResponse.failure(
       "Old password is incorrect.",
       HTTPSTATUS.UNAUTHORIZED
     ).send(res);
@@ -104,7 +115,7 @@ const updatePassword = async (req, res) => {
   // clear refresh token on password change
   user.refreshToken = undefined;
 
-  await user.save();
+  await user.save({ session: req.dbSession });
 
   return ApiResponse.success(
     null,

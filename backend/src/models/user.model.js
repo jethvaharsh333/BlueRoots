@@ -36,6 +36,10 @@ const userSchema = new Schema(
             enum: ["male", "female"],
             default: "male",
         },
+        ecoPoints: {
+            type: Number,
+            default: 0,
+        },
         accountType: {
             type: String,
             enum: ["default", "google", "github"],

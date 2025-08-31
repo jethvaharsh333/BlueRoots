@@ -24,7 +24,7 @@ const createUser = async (req, res) => {
         return ApiResponse.failure("User with this email already exists.", HTTPSTATUS.BAD_REQUEST).send(res);
     }
 
-    const user = new User({ username, email, password, role });
+    const user = new User({ username, email, password, role, isEmailVerified:true });
     await user.save({ session: req.dbSession });
 
     const userrole = await Role.findOne({ roleName: role });

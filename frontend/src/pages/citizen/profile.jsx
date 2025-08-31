@@ -131,23 +131,13 @@ const Profile = () => {
 
   return (
     <motion.div 
-      className="max-w-3xl mx-auto p-4"
+      className="max-w-5xl mx-auto p-4"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
       key={key} // Use key to force re-render
     >
       {/* Header */}
-      <motion.div 
-        className="flex items-center gap-x-4 mb-8"
-        variants={itemVariants}
-      >
-        <IconBadge icon={UserRound} />
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">My Profile</h2>
-          <p className="text-gray-600 mt-1">Manage your account information and settings</p>
-        </div>
-      </motion.div>
 
       {/* Loading State */}
       {loading && (
@@ -184,7 +174,7 @@ const Profile = () => {
                 transition={{ duration: 0.3 }}
               >
                 {/* Header Section */}
-                <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-8 py-6 text-white">
+                <div className="bg-gradient-to-r from-emerald-500 to-blue-600 px-8 py-6 text-white">
                   <div className="flex flex-col sm:flex-row items-center gap-6">
                     <motion.div 
                       className="relative"
@@ -326,3 +316,183 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+// import { useEffect, useState } from "react";
+// import { BACKEND_URL } from "../../constant";
+// import axiosClient from "../../utils/axiosClient";
+// import toast from "react-hot-toast";
+// import { UserRound, Pencil, KeyRound } from "lucide-react";
+// import { IconBadge } from "../../components/common/icon-badge";
+// import UpdateProfile from "./update-profile";
+// import UpdatePassword from "./update-password";
+
+// import { motion, AnimatePresence } from "framer-motion";
+
+// const Profile = () => {
+//   const [loading, setLoading] = useState(false);
+//   const [user, setUser] = useState(null);
+//   const [isEditing, setIsEditing] = useState(false);
+//   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+//   useEffect(() => {
+//     const fetchUser = async () => {
+//       try {
+//         setLoading(true);
+//         const res = await axiosClient.get(BACKEND_URL + "/user/current");
+//         setUser(res.data.data);
+//         toast.success(res.data.message);
+//       } catch (error) {
+//         toast.error(error.response?.data?.message || "Something went wrong");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchUser();
+//   }, []);
+
+//   return (
+//     <div className="max-w-2xl mx-auto p-4">
+//       <div className="flex items-center gap-x-2 mb-4">
+//         <IconBadge icon={UserRound} />
+//         <motion.h2
+//           className="text-2xl font-bold text-green-900"
+//           initial={{ opacity: 0, y: -20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.6 }}
+//         >
+//           My Profile
+//         </motion.h2>
+//       </div>
+
+//       {loading && <div className="text-gray-500">Loading...</div>}
+
+//       <AnimatePresence mode="wait">
+//         {user && (
+//           <motion.div
+//             key="profile-card"
+//             initial={{ opacity: 0, y: 30 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             exit={{ opacity: 0, y: 30 }}
+//             transition={{ duration: 0.5 }}
+//             className="bg-white rounded-2xl shadow-md p-6"
+//           >
+//             {/* Avatar */}
+//             <div className="flex justify-center mb-6 relative">
+//               <AnimatePresence>
+//                 <motion.img
+//                   key={user.avatarUrl}
+//                   src={user.avatarUrl}
+//                   alt={user.username}
+//                   className="w-28 h-28 rounded-full border-4 border-green-200 shadow-md object-cover"
+//                   initial={{ opacity: 0, scale: 0.8 }}
+//                   animate={{ opacity: 1, scale: 1 }}
+//                   exit={{ opacity: 0, scale: 0.8 }}
+//                   transition={{ duration: 0.5 }}
+//                 />
+//               </AnimatePresence>
+//             </div>
+
+//             {/* Info/Grid and Actions */}
+//             {!isEditing && !isUpdatingPassword ? (
+//               <>
+//                 <motion.div
+//                   className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700"
+//                   initial={{ opacity: 0 }}
+//                   animate={{ opacity: 1 }}
+//                   transition={{ duration: 0.4, delay: 0.15 }}
+//                 >
+//                   <div>
+//                     <p className="text-sm text-gray-500">Username</p>
+//                     <p className="font-medium">{user.username}</p>
+//                   </div>
+//                   <div>
+//                     <p className="text-sm text-gray-500">Email</p>
+//                     <p className="font-medium">{user.email}</p>
+//                   </div>
+//                   <div>
+//                     <p className="text-sm text-gray-500">Gender</p>
+//                     <p className="font-medium capitalize">{user.gender}</p>
+//                   </div>
+//                   <div>
+//                     <p className="text-sm text-gray-500">Account Type</p>
+//                     <p className="font-medium">{user.accountType}</p>
+//                   </div>
+//                   <div>
+//                     <p className="text-sm text-gray-500">Created At</p>
+//                     <p className="font-medium">
+//                       {new Date(user.createdAt).toLocaleDateString()}
+//                     </p>
+//                   </div>
+//                   <div>
+//                     <p className="text-sm text-gray-500">Last Updated</p>
+//                     <p className="font-medium">
+//                       {new Date(user.updatedAt).toLocaleDateString()}
+//                     </p>
+//                   </div>
+//                 </motion.div>
+
+//                 {/* Actions */}
+//                 <div className="flex gap-3 mt-6">
+//                   <motion.button
+//                     onClick={() => setIsEditing(true)}
+//                     className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+//                     whileHover={{ scale: 1.05 }}
+//                     whileTap={{ scale: 0.95 }}
+//                   >
+//                     <Pencil size={18} />
+//                     Edit Profile
+//                   </motion.button>
+//                   <motion.button
+//                     onClick={() => setIsUpdatingPassword(true)}
+//                     className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+//                     whileHover={{ scale: 1.05 }}
+//                     whileTap={{ scale: 0.95 }}
+//                   >
+//                     <KeyRound size={18} />
+//                     Update Password
+//                   </motion.button>
+//                 </div>
+//               </>
+//             ) : (
+//               <AnimatePresence mode="wait">
+//                 {isEditing && (
+//                   <motion.div
+//                     key="edit-profile"
+//                     initial={{ opacity: 0, x: 40 }}
+//                     animate={{ opacity: 1, x: 0 }}
+//                     exit={{ opacity: 0, x: -40 }}
+//                     transition={{ duration: 0.4 }}
+//                   >
+//                     <UpdateProfile
+//                       user={user}
+//                       setUser={setUser}
+//                       onCancel={() => setIsEditing(false)}
+//                       onSave={() => setIsEditing(false)}
+//                     />
+//                   </motion.div>
+//                 )}
+//                 {isUpdatingPassword && (
+//                   <motion.div
+//                     key="update-password"
+//                     initial={{ opacity: 0, x: 40 }}
+//                     animate={{ opacity: 1, x: 0 }}
+//                     exit={{ opacity: 0, x: -40 }}
+//                     transition={{ duration: 0.4 }}
+//                   >
+//                     <UpdatePassword
+//                       onCancel={() => setIsUpdatingPassword(false)}
+//                       onSave={() => setIsUpdatingPassword(false)}
+//                     />
+//                   </motion.div>
+//                 )}
+//               </AnimatePresence>
+//             )}
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+//     </div>
+//   );
+// };
+
+// export default Profile;

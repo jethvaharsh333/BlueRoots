@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
@@ -9,16 +10,21 @@ import {
   FaUser,
   FaSignOutAlt,
   FaBars,
+  FaRobot,
 } from "react-icons/fa";
+import axiosClient from "../../utils/axiosClient";
+import { BACKEND_URL } from "../../constant";
+import Profile from './profile';
 
 // Modern Icon Components (using React Icons)
 const DashboardIcon = () => <FaTachometerAlt className="w-5 h-5" />;
 const ReportIcon = () => <FaPlusCircle className="w-5 h-5" />;
 const ListIcon = () => <FaList className="w-5 h-5" />;
 const LeaderboardIcon = () => <FaGlobe className="w-5 h-5" />;
-const ProfileIcon = () => <FaUser className="w-5 h-5" />;
+const ProfileIcon = () => <FaUser className="w-3 h-6" />;
 const LogoutIcon = () => <FaSignOutAlt className="w-5 h-5" />;
 const MenuIcon = () => <FaBars className="w-6 h-6" />;
+const AIcon = () => <GiArtificialHive className="w-5 h-5" />;
 
 const CloseIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,6 +111,7 @@ const logoVariants = {
 
 const CitizenLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -119,7 +126,7 @@ const CitizenLayout = () => {
     { path: "/reports/new", label: "Report Incident", icon: ReportIcon },
     { path: "/reports", label: "My Reports", icon: ListIcon },
     { path: "/leaderboard", label: "Leaderboard", icon: LeaderboardIcon },
-    { path: "/profile", label: "Profile", icon: ProfileIcon },
+    { path: "/chat-bot", label: "ChatBot", icon: FaRobot },
   ];
 
   const role = localStorage.getItem('role');
@@ -127,6 +134,23 @@ const CitizenLayout = () => {
       toast.error("Something get wrong.");
       navigate("/login");
   }
+  const email = localStorage.getItem('email');
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosClient.get(`${BACKEND_URL}/user/current`);
+        setUser(res.data.data);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        // Don't show error toast as this is background loading
+      }
+    };
+
+    fetchUser();
+  }, []);
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -174,6 +198,7 @@ const CitizenLayout = () => {
                 >
                   <NavLink
                     to={item.path}
+                    end
                     className={({ isActive }) =>
                       `group flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 cursor-pointer
                        ${isActive
@@ -203,48 +228,52 @@ const CitizenLayout = () => {
         </div>
 
         {/* User Profile & Logout */}
-        <motion.div 
-          className="p-4 border-t border-gray-100"
-          variants={itemVariants}
-        >
-          <motion.div 
-            className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 mb-3"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <motion.div 
-              className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center"
-              whileHover={{ rotate: 5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <span className="text-white font-semibold text-sm">JD</span>
-            </motion.div>
-            <div className="flex-1">
-              <p className="font-medium text-gray-900 text-sm">John Doe</p>
-              <p className="text-gray-500 text-xs">{role}</p>
-            </div>
-          </motion.div>
-          
-          <motion.button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-200 group"
-            whileHover={{ x: 4 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <LogoutIcon />
-            <span className="font-medium">Logout</span>
-            <motion.div 
-              className="ml-auto opacity-0 group-hover:opacity-100"
-              initial={{ x: -10 }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </motion.div>
-          </motion.button>
-        </motion.div>
+<motion.div 
+  className="p-4 border-t border-gray-100"
+  variants={itemVariants}
+>
+  {/* Profile Link - Clicking this will navigate to /profile */}
+  <motion.div 
+    className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 mb-3 cursor-pointer"
+    whileHover={{ scale: 1.02 }}
+    transition={{ duration: 0.2 }}
+    onClick={() => navigate('/profile')} // Add click handler to navigate to profile
+  >
+    <motion.div 
+      className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center"
+      whileHover={{ rotate: 5 }}
+      transition={{ duration: 0.2 }}
+    >
+      {/* Use the ProfileIcon component instead of faUser */}
+      <ProfileIcon />
+    </motion.div>
+    <div className="flex-1">
+      <p className="font-medium text-gray-900 text-sm">{user?.username || 'Loading...'}</p>
+      <p className="text-gray-500 text-xs">{role}</p>
+    </div>
+        
+  </motion.div>
+  
+  <motion.button
+    onClick={handleLogout}
+    className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-200 group"
+    whileHover={{ x: 4 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <LogoutIcon />
+    <span className="font-medium">Logout</span>
+    <motion.div 
+      className="ml-auto opacity-0 group-hover:opacity-100"
+      initial={{ x: -10 }}
+      whileHover={{ x: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </motion.div>
+  </motion.button>
+</motion.div>
       </motion.div>
 
       {/* MOBILE NAVBAR */}
@@ -274,9 +303,9 @@ const CitizenLayout = () => {
                 className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center"
                 whileHover={{ rotate: 5 }}
               >
-                <span className="text-white font-bold text-sm">G</span>
+                <span className="text-white font-bold text-sm">B</span>
               </motion.div>
-              <span className="font-bold text-gray-900">Gateway</span>
+              <span className="font-bold text-gray-900">BlueRoots</span>
             </motion.div>
           </NavLink>
           
@@ -313,11 +342,11 @@ const CitizenLayout = () => {
                       className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl flex items-center justify-center"
                       variants={logoVariants}
                     >
-                      <span className="text-white font-bold text-lg">G</span>
+                      <span className="text-white font-bold text-lg">B</span>
                     </motion.div>
                     <div>
-                      <h1 className="font-bold text-gray-900 text-lg">Gateway</h1>
-                      <p className="text-gray-500 text-sm">Group</p>
+                      <h1 className="font-bold text-gray-900 text-lg">BlueRoots</h1>
+                      <p className="text-gray-500 text-sm">{role}</p>
                     </div>
                   </div>
                   <motion.button
@@ -378,15 +407,17 @@ const CitizenLayout = () => {
                   <motion.div 
                     className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 mb-3"
                     whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={() => navigate("/profile")}
                   >
                     <motion.div 
                       className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center"
                       whileHover={{ rotate: 5 }}
                     >
-                      <span className="text-white font-semibold text-sm">JD</span>
+                      <ProfileIcon />
                     </motion.div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">John Doe</p>
+                      <p className="font-medium text-gray-900 text-sm">{user?.username || email}</p>
                       <p className="text-gray-500 text-xs">({role})</p>
                     </div>
                   </motion.div>
@@ -429,7 +460,7 @@ const sidebarItems = [
   { path: "/reports/new", label: "Report Incident", icon: FaPlusCircle },
   { path: "/reports", label: "My Reports", icon: FaList },
   { path: "/leaderboard", label: "Leaderboard", icon: FaGlobe },
-  { path: "/profile", label: "Profile", icon: FaUser },
+  { path: "/chat-bot", label: "ChatBot", icon: FaRobot },
 ];
 
 export default CitizenLayout;

@@ -55,40 +55,104 @@ const CitizenDashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
+  const fetchDashboardData = async () => {
       try {
         setLoading(true);
         
-        // Fetch user data
+        // Fetch user data first
         const userRes = await axiosClient.get(`${BACKEND_URL}/user/current`);
-        setUser(userRes.data.data);
+        const userData = userRes.data.data;
+        setUser(userData);
+        
+        // Set initial user stats from user profile data
+        console.log("User data received:", userData);
+        setUserStats({
+          ecoPoints: userData.ecoPoints || 0,
+          reportsSubmitted: 0,
+          rank: 'N/A'
+        });
 
-        // Fetch user stats (you might need to create this endpoint)
+        // Fetch citizen dashboard data from the actual API
         try {
-          const statsRes = await axiosClient.get(`${BACKEND_URL}/user/stats`);
-          setUserStats(statsRes.data.data);
+          const dashboardRes = await axiosClient.get(`${BACKEND_URL}/dashboard/citizen`);
+          const dashboardData = dashboardRes.data.data;
+          console.log("Dashboard data received:", dashboardData);
+          
+          // Update user stats from dashboard data
+          setUserStats({
+            ecoPoints: dashboardData.stats.ecoPoints || userData.ecoPoints || 0,
+            reportsSubmitted: dashboardData.stats.reportsSubmitted || 0,
+            rank: 0 // Will be calculated from leaderboard
+          });
+          
+          // Set recent reports
+          setRecentReports(dashboardData.recentReports || []);
+          
+          // Set leaderboard data and calculate user rank
+          const leaderboardData = dashboardData.leaderboard || [];
+          setLeaderboard(leaderboardData.slice(0, 3));
+          
+          // Calculate user's rank from full leaderboard
+          const userRank = leaderboardData.findIndex(user => user._id === userData._id || user.name === userData.username) + 1;
+          setUserStats(prev => ({
+            ...prev,
+            rank: userRank > 0 ? userRank : 'N/A'
+          }));
+          
         } catch (error) {
-          console.log("Stats endpoint not available, using defaults");
-        }
-
-        // Fetch recent reports
-        try {
-          const reportsRes = await axiosClient.get(`${BACKEND_URL}/reports/my-reports?limit=4`);
-          setRecentReports(reportsRes.data.data || []);
-        } catch (error) {
-          console.log("Reports endpoint error:", error);
-        }
-
-        // Fetch leaderboard top 3
-        try {
-          const leaderboardRes = await axiosClient.get(`${BACKEND_URL}/leaderboard`);
-          if (leaderboardRes.data.success) {
-            const sortedData = leaderboardRes.data.data.sort((a, b) => b.ecoPoints - a.ecoPoints);
-            setLeaderboard(sortedData.slice(0, 3));
+          console.log("Dashboard endpoint not available, using individual endpoints and user data");
+          console.log("Dashboard API error:", error);
+          
+          // Use user data directly for eco points
+          setUserStats({
+            ecoPoints: userData.ecoPoints || 0,
+            reportsSubmitted: 0, // Will be updated from reports endpoint
+            rank: 'N/A'
+          });
+          
+          // Fallback to individual endpoints
+          try {
+            // Get recent reports for display
+            const reportsRes = await axiosClient.get(`${BACKEND_URL}/reports/my-reports?limit=4`);
+            const reports = reportsRes.data.data || [];
+            setRecentReports(reports);
+            
+            // Get total count of all user reports
+            try {
+              const allReportsRes = await axiosClient.get(`${BACKEND_URL}/reports/my-reports`);
+              const allReports = allReportsRes.data.data || [];
+              setUserStats(prev => ({
+                ...prev,
+                reportsSubmitted: allReports.length
+              }));
+            } catch (countError) {
+              // If we can't get all reports, use the recent reports count as fallback
+              console.log("Could not fetch all reports count, using recent reports count");
+              setUserStats(prev => ({
+                ...prev,
+                reportsSubmitted: reports.length
+              }));
+            }
+          } catch (error) {
+            console.log("Reports endpoint error:", error);
           }
-        } catch (error) {
-          console.log("Leaderboard endpoint error:", error);
+
+          try {
+            const leaderboardRes = await axiosClient.get(`${BACKEND_URL}/leaderboard`);
+            if (leaderboardRes.data.success) {
+              const sortedData = leaderboardRes.data.data.sort((a, b) => b.ecoPoints - a.ecoPoints);
+              setLeaderboard(sortedData.slice(0, 3));
+              
+              // Calculate user's rank from leaderboard
+              const userRank = sortedData.findIndex(user => user._id === userData._id || user.name === userData.username) + 1;
+              setUserStats(prev => ({
+                ...prev,
+                rank: userRank > 0 ? userRank : 'N/A'
+              }));
+            }
+          } catch (error) {
+            console.log("Leaderboard endpoint error:", error);
+          }
         }
 
       } catch (error) {
@@ -99,6 +163,12 @@ const CitizenDashboard = () => {
       }
     };
 
+  // Manual refresh function
+  const refreshDashboard = () => {
+    fetchDashboardData();
+  };
+
+  useEffect(() => {
     fetchDashboardData();
   }, []);
 
@@ -214,7 +284,7 @@ const CitizenDashboard = () => {
               >
                 👋
               </motion.div>
-              <div className="text-center md:text-left">
+              <div className="text-center md:text-left flex-1">
                 <motion.h1 
                   className="text-3xl md:text-4xl font-bold mb-2"
                   variants={itemVariants}
@@ -228,6 +298,25 @@ const CitizenDashboard = () => {
                   Ready to make a positive impact on our environment today? 🌱
                 </motion.p>
               </div>
+              
+              {/* Refresh Button */}
+              <motion.button
+                onClick={refreshDashboard}
+                className="bg-white/20 hover:bg-white/30 text-white p-3 rounded-xl transition-all duration-200 flex items-center gap-2"
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                disabled={loading}
+              >
+                <motion.span
+                  animate={loading ? { rotate: 360 } : {}}
+                  transition={loading ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
+                  className="text-xl"
+                >
+                  🔄
+                </motion.span>
+                <span className="text-sm font-medium">Refresh</span>
+              </motion.button>
             </div>
           </div>
         </motion.div>

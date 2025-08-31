@@ -1,4 +1,6 @@
 import { HTTPSTATUS } from "../config/http.config.js";
+import { Alert } from "../models/alert.model.js";
+import { Report } from "../models/report.model.js";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -7,6 +9,15 @@ const getCurrentUser = async(req, res) => {
 
     return ApiResponse.success(user, "Current user fetched successfully.", HTTPSTATUS.OK).send(res);
 }
+
+const getAllUsers = async (req, res) => {
+  const users = await User.find({}).select('-password');
+  return ApiResponse.success(
+    users,
+    'All users fetched successfully.',
+    HTTPSTATUS.OK
+  ).send(res);
+};
 
 const logout = async(req, res) => {
 
@@ -130,4 +141,116 @@ const updateEmail = async(req, res) => {
 }
 
 
-export { getCurrentUser, logout, updateProfile, updatePassword, updateEmail };
+const getGovernmentDashboard = async (req, res) => {
+  // 1. Fetch key stats about Alerts
+  const newAlertsCount = await Alert.countDocuments({ status: 'NEW' });
+  const investigatingAlertsCount = await Alert.countDocuments({
+    status: 'UNDER_INVESTIGATION',
+  });
+
+  // 2. Fetch priority alerts (most recent new alerts)
+  const priorityAlerts = await Alert.find({ status: 'NEW' })
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .populate('createdBy', 'name')
+    .select('title severity createdAt createdBy');
+
+  // 3. Fetch recently updated alerts to show recent activity
+  const recentlyUpdatedAlerts = await Alert.find()
+    .sort({ updatedAt: -1 })
+    .limit(5)
+    .populate('createdBy', 'name')
+    .select('title status updatedAt severity');
+
+  const dashboardData = {
+    stats: {
+      newAlerts: newAlertsCount,
+      underInvestigation: investigatingAlertsCount,
+    },
+    priorityAlerts,
+    recentlyUpdatedAlerts,
+  };
+
+  return ApiResponse.success(
+    dashboardData,
+    'Government dashboard data fetched successfully.',
+    HTTPSTATUS.OK
+  ).send(res);
+};
+
+const getCitizenDashboard = async (req, res) => {
+  const userId = req.user._id;
+
+  // 1. Fetch user's personal stats (ecoPoints)
+  const user = await User.findById(userId).select('ecoPoints name');
+  if (!user) {
+    return ApiResponse.failure('User not found.', HTTPSTATUS.NOT_FOUND).send(res);
+  }
+
+  // 2. Fetch aggregate report stats
+  const reportsSubmitted = await Report.countDocuments({ user: userId });
+
+  // 3. Fetch recent reports
+  const recentReports = await Report.find({ user: userId })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .select('category status createdAt');
+
+  // 4. Fetch leaderboard snippet
+  const leaderboard = await User.find({ role: 'PUBLIC' })
+    .sort({ ecoPoints: -1 })
+    .limit(5)
+    .select('name ecoPoints');
+
+  const dashboardData = {
+    stats: {
+      ecoPoints: user.ecoPoints,
+      reportsSubmitted,
+    },
+    recentReports,
+    leaderboard,
+  };
+
+  console.log(dashboardData);
+
+  return ApiResponse.success(
+    dashboardData,
+    'Citizen dashboard data fetched successfully.',
+    HTTPSTATUS.OK
+  ).send(res);
+};
+
+const getNgoDashboard = async (req, res) => {
+  const ngoUserId = req.user._id;
+
+  // 1. Fetch key stats
+  const pendingReportsCount = await Report.countDocuments({ status: 'PENDING' });
+  const alertsCreatedCount = await Alert.countDocuments({ createdBy: ngoUserId });
+
+  // 2. Fetch recent activity (latest pending reports)
+  const recentActivity = await Report.find({ status: 'PENDING' })
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .select('category location createdAt');
+
+  // 3. Fetch all report locations for the main map
+  // For performance on large datasets, consider pagination or geographic clustering
+  const mapPoints = await Report.find({}).select('location status category');
+
+  const dashboardData = {
+    stats: {
+      pendingReports: pendingReportsCount,
+      alertsCreated: alertsCreatedCount,
+    },
+    recentActivity,
+    mapPoints,
+  };
+
+  return ApiResponse.success(
+    dashboardData,
+    'NGO dashboard data fetched successfully.',
+    HTTPSTATUS.OK
+  ).send(res);
+};
+
+export { getCurrentUser, logout, updateProfile, updatePassword, updateEmail, getAllUsers, getGovernmentDashboard, getCitizenDashboard, getNgoDashboard };

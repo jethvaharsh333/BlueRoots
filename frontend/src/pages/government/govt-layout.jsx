@@ -39,7 +39,7 @@ const logoVariants = {
 // ✅ Government Sidebar Items
 const sidebarItems = [
   { path: "/govt/dashboard", label: "Dashboard", icon: DashboardIcon },
-  { path: "/govt/analytics", label: "Analytics", icon: AnalyticsIcon },
+  // { path: "/govt/analytics", label: "Analytics", icon: AnalyticsIcon },
   { path: "/govt/alerts", label: "Alerts", icon: AlertsIcon },
   { path: "/govt/add-user", label: "Add User", icon: AddUserIcon },
   { path: "/govt/users", label: "Users", icon: UsersIcon },

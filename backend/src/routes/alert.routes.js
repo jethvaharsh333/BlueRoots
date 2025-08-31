@@ -6,7 +6,7 @@ import { authenticator } from "../middlewares/authenticator.middleware.js";
 const router = Router();
 
 router.route("/:id").get( authenticator("NGO"), asyncHandler(getAlertById));
-router.route("/all").get(asyncHandler(getAllAlerts));
+router.route("/").get(asyncHandler(getAllAlerts));
 router.route("/").post(authenticator("NGO"), createAlert);    
 
 export default router;

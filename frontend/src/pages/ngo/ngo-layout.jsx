@@ -38,9 +38,9 @@ const logoVariants = {
 
 const sidebarItems = [
     { path: "/ngo/dashboard", label: "Dashboard", icon: DashboardIcon },
-    { path: "/ngo/satellite-view-report", label: "Satellite", icon: AnalyticsIcon },
-    { path: "/ngo/verify", label: "Verify", icon: AlertsIcon },
-    { path: "/ngo/analytics", label: "Analytics", icon: AddUserIcon },
+    // { path: "/ngo/satellite-view-report", label: "Satellite", icon: AnalyticsIcon },
+    // { path: "/ngo/verify", label: "Verify", icon: AlertsIcon },
+    // { path: "/ngo/analytics", label: "Analytics", icon: AddUserIcon },
     { path: "/ngo/create-alert", label: "Create Alert", icon: AddUserIcon },
     { path: "/ngo/reports", label: "Reports", icon: AddUserIcon },
 

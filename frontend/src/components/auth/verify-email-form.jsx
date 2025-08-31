@@ -38,6 +38,7 @@ const VerifyEmailForm = () => {
             }
             console.log("api firing--->")
             const res = await axiosClient.post(BACKEND_URL + "/auth/verify-email", { email, code:otp});
+            navigate('/login');
             console.log(res);
             toast.success(res.data.message);
         } catch (err) {
@@ -57,7 +58,7 @@ const VerifyEmailForm = () => {
         setError("");
 
         console.log("Resending OTP...");
-
+        
         // Example API call:
         // fetch("/api/resend-otp", { method: "POST" });
     };

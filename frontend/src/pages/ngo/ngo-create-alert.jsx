@@ -79,10 +79,8 @@ const NgoCreateAlert = () => {
             .map(report => report._id);
         
         if (verifiedReportIds.length === selectedReportIds.length) {
-            // If all verified are already selected, deselect all
             setSelectedReportIds([]);
         } else {
-            // Otherwise select all verified
             setSelectedReportIds(verifiedReportIds);
         }
     };
@@ -107,7 +105,6 @@ const NgoCreateAlert = () => {
             const response = await axiosClient.post(`${BACKEND_URL}/alert`, payload);
             toast.success(response.data.message || "Alert created successfully");
             
-            // Reset form
             setFormData({
                 title: '',
                 severity: 'LOW',
@@ -125,7 +122,6 @@ const NgoCreateAlert = () => {
         }
     };
 
-    // Filter reports based on status
     const filteredReports = statusFilter === 'ALL' 
         ? reports 
         : reports.filter(report => report.status === statusFilter);
@@ -134,13 +130,14 @@ const NgoCreateAlert = () => {
     const selectedReports = reports.filter(report => selectedReportIds.includes(report._id));
 
     return (
-        <div className="bg-gray-900 min-h-screen text-gray-300 font-sans p-4 md:p-8">
+        <>
+        <h1 className="text-2xl font-bold mb-6">Escalate Reports to Alert</h1>
+        <div className=" min-h-screen  font-sans md:p-8">
             <div className="max-w-7xl mx-auto">
                 <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-white">Escalate Reports to Alert</h1>
-                    <p className="text-gray-400 mt-1">Select verified reports and bundle them into a single, actionable alert for authorities.</p>
+                    <p className="text-gray-600 mt-1">Select verified reports and bundle them into a single, actionable alert for authorities.</p>
                     {verifiedReports.length === 0 && !isLoading && (
-                        <div className="mt-4 p-4 bg-yellow-900 text-yellow-200 rounded-md">
+                        <div className="mt-4 p-4 bg-yellow-100 text-yellow-700 rounded-md">
                             <p className="font-semibold">No verified reports available</p>
                             <p className="text-sm mt-1">Only reports with status "VERIFIED" can be selected for alerts.</p>
                         </div>
@@ -148,14 +145,14 @@ const NgoCreateAlert = () => {
                 </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left Panel: Report Selection */}
-                    <div className="lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-lg">
+                    {/* Left Panel */}
+                    <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-white">Select Reports</h2>
+                            <h2 className="text-xl font-semibold text-gray-900">Select Reports</h2>
                             <button
                                 onClick={handleSelectAllVerified}
                                 disabled={verifiedReports.length === 0}
-                                className="px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-md"
+                                className="px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 text-white disabled:bg-gray-400 rounded-md"
                             >
                                 {selectedReportIds.length === verifiedReports.length ? "Deselect All Verified" : "Select All Verified"}
                             </button>
@@ -169,7 +166,7 @@ const NgoCreateAlert = () => {
                                     className={`px-3 py-1 text-xs rounded-full ${
                                         statusFilter === status 
                                             ? 'bg-indigo-600 text-white' 
-                                            : 'bg-gray-700 hover:bg-gray-600'
+                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                     }`}
                                 >
                                     {status} {status === 'VERIFIED' && `(${verifiedReports.length})`}
@@ -179,17 +176,17 @@ const NgoCreateAlert = () => {
                         
                         <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
                             {isLoading && (
-                                <div className="text-center py-10">
-                                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-400"></div>
+                                <div className="text-center py-10 text-gray-600">
+                                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
                                     <p className="mt-2">Loading reports...</p>
                                 </div>
                             )}
                             
                             {error && !isLoading && (
-                                <div className="text-red-400 text-center py-10">
+                                <div className="text-red-500 text-center py-10">
                                     <p>Error: {error}</p>
                                     <button 
-                                        className="mt-4 px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600"
+                                        className="mt-4 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
                                         onClick={() => window.location.reload()}
                                     >
                                         Try Again
@@ -198,9 +195,9 @@ const NgoCreateAlert = () => {
                             )}
                             
                             {!isLoading && !error && filteredReports.length === 0 && (
-                                <p className="text-center py-10">
+                                <p className="text-center py-10 text-gray-600">
                                     {statusFilter === 'VERIFIED' 
-                                        ? "No verified reports available. Only verified reports can be selected for alerts." 
+                                        ? "No verified reports available." 
                                         : `No ${statusFilter.toLowerCase()} reports available.`
                                     }
                                 </p>
@@ -209,12 +206,12 @@ const NgoCreateAlert = () => {
                             {!isLoading && !error && filteredReports.map(report => {
                                 const isVerified = report.status === 'VERIFIED';
                                 const isSelected = selectedReportIds.includes(report._id);
-                                const statusColor = isVerified ? 'text-green-400' : 'text-yellow-400';
+                                const statusColor = isVerified ? 'text-green-600' : 'text-yellow-600';
                                 
                                 return (
                                     <div 
                                         key={report._id} 
-                                        className={`bg-gray-900 p-4 rounded-lg shadow flex items-start gap-4 transition-all ${isSelected ? 'ring-2 ring-indigo-500' : ''} ${!isVerified ? 'opacity-70' : 'cursor-pointer hover:bg-gray-850'}`}
+                                        className={`bg-gray-50 p-4 rounded-lg shadow flex items-start gap-4 transition-all ${isSelected ? 'ring-2 ring-indigo-500' : ''} ${!isVerified ? 'opacity-70' : 'cursor-pointer hover:bg-gray-100'}`}
                                         onClick={() => handleCheckboxChange(report._id, isVerified)}
                                     >
                                         <input
@@ -223,17 +220,17 @@ const NgoCreateAlert = () => {
                                             checked={isSelected}
                                             onChange={() => handleCheckboxChange(report._id, isVerified)}
                                             disabled={!isVerified}
-                                            className="mt-1 h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-600 bg-gray-700"
+                                            className="mt-1 h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"
                                         />
                                         <div className="flex-1">
                                             <div className="flex justify-between items-center">
                                                 <span className={`text-xs font-bold uppercase tracking-wider ${statusColor}`}>{report.status}</span>
-                                                <span className="text-xs text-gray-400">{new Date(report.createdAt).toLocaleDateString()}</span>
+                                                <span className="text-xs text-gray-500">{new Date(report.createdAt).toLocaleDateString()}</span>
                                             </div>
-                                            <p className="font-semibold text-white mt-1">{report.category?.replace(/_/g, ' ') || 'Unknown Category'}</p>
-                                            <p className="text-sm text-gray-300 mt-1 line-clamp-2">{report.notes || 'No notes provided.'}</p>
+                                            <p className="font-semibold text-gray-900 mt-1">{report.category?.replace(/_/g, ' ') || 'Unknown Category'}</p>
+                                            <p className="text-sm text-gray-600 mt-1 line-clamp-2">{report.notes || 'No notes provided.'}</p>
                                             {!isVerified && (
-                                                <p className="text-xs text-yellow-400 mt-1">Only verified reports can be selected</p>
+                                                <p className="text-xs text-yellow-600 mt-1">Only verified reports can be selected</p>
                                             )}
                                         </div>
                                         <img 
@@ -250,24 +247,24 @@ const NgoCreateAlert = () => {
                         </div>
                     </div>
 
-                    {/* Right Panel: Alert Form and Selected Reports */}
+                    {/* Right Panel */}
                     <div className="space-y-8">
-                        {/* Selected Reports Summary */}
-                        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                            <h2 className="text-xl font-semibold text-white mb-4">Selected Reports</h2>
+                        {/* Selected Reports */}
+                        <div className="bg-white p-6 rounded-lg shadow-md">
+                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Selected Reports</h2>
                             <div className="space-y-4 max-h-[300px] overflow-y-auto">
                                 {selectedReports.length === 0 ? (
-                                    <p className="text-gray-400 text-center py-4">No reports selected yet</p>
+                                    <p className="text-gray-500 text-center py-4">No reports selected yet</p>
                                 ) : (
                                     selectedReports.map(report => (
-                                        <div key={report._id} className="bg-gray-900 p-3 rounded-lg flex items-center justify-between">
+                                        <div key={report._id} className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
                                             <div>
-                                                <p className="text-sm font-medium text-white">{report.category?.replace(/_/g, ' ')}</p>
-                                                <p className="text-xs text-gray-400">{new Date(report.createdAt).toLocaleDateString()}</p>
+                                                <p className="text-sm font-medium text-gray-900">{report.category?.replace(/_/g, ' ')}</p>
+                                                <p className="text-xs text-gray-500">{new Date(report.createdAt).toLocaleDateString()}</p>
                                             </div>
                                             <button 
                                                 onClick={() => handleCheckboxChange(report._id, true)}
-                                                className="text-red-400 hover:text-red-300"
+                                                className="text-red-500 hover:text-red-600"
                                             >
                                                 Remove
                                             </button>
@@ -275,17 +272,17 @@ const NgoCreateAlert = () => {
                                     ))
                                 )}
                             </div>
-                            <div className="mt-4 pt-4 border-t border-gray-700">
-                                <p className="text-sm text-gray-400">Total Selected: <span className="font-bold text-white">{selectedReportIds.length}</span></p>
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                <p className="text-sm text-gray-600">Total Selected: <span className="font-bold text-gray-900">{selectedReportIds.length}</span></p>
                             </div>
                         </div>
 
                         {/* Alert Form */}
-                        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                            <h2 className="text-xl font-semibold text-white mb-4">Alert Details</h2>
+                        <div className="bg-white p-6 rounded-lg shadow-md">
+                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Alert Details</h2>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label htmlFor="title" className="block text-sm font-medium text-gray-300">Alert Title</label>
+                                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">Alert Title</label>
                                     <input 
                                         type="text" 
                                         id="title" 
@@ -293,19 +290,19 @@ const NgoCreateAlert = () => {
                                         value={formData.title} 
                                         onChange={handleInputChange} 
                                         required 
-                                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-white" 
+                                        className="mt-1 block w-full bg-white border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-gray-900" 
                                         placeholder="e.g., Illegal Cutting in Sector 4" 
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="severity" className="block text-sm font-medium text-gray-300">Severity</label>
+                                    <label htmlFor="severity" className="block text-sm font-medium text-gray-700">Severity</label>
                                     <select 
                                         id="severity" 
                                         name="severity" 
                                         value={formData.severity} 
                                         onChange={handleInputChange} 
                                         required 
-                                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-white"
+                                        className="mt-1 block w-full bg-white border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-gray-900"
                                     >
                                         <option value="LOW">Low</option>
                                         <option value="MEDIUM">Medium</option>
@@ -313,7 +310,7 @@ const NgoCreateAlert = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-300">Description / Summary</label>
+                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description / Summary</label>
                                     <textarea 
                                         id="description" 
                                         name="description" 
@@ -321,13 +318,13 @@ const NgoCreateAlert = () => {
                                         onChange={handleInputChange} 
                                         rows="4" 
                                         required 
-                                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-white" 
+                                        className="mt-1 block w-full bg-white border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-gray-900" 
                                         placeholder="Summarize the incident..."
                                     ></textarea>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label htmlFor="longitude" className="block text-sm font-medium text-gray-300">Longitude</label>
+                                        <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Longitude</label>
                                         <input 
                                             type="number" 
                                             step="any" 
@@ -336,12 +333,12 @@ const NgoCreateAlert = () => {
                                             value={formData.longitude} 
                                             onChange={handleInputChange} 
                                             required 
-                                            className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-white" 
+                                            className="mt-1 block w-full bg-white border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-gray-900" 
                                             placeholder="e.g., 88.8004" 
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="latitude" className="block text-sm font-medium text-gray-300">Latitude</label>
+                                        <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Latitude</label>
                                         <input 
                                             type="number" 
                                             step="any" 
@@ -350,7 +347,7 @@ const NgoCreateAlert = () => {
                                             value={formData.latitude} 
                                             onChange={handleInputChange} 
                                             required 
-                                            className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-white" 
+                                            className="mt-1 block w-full bg-white border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 text-gray-900" 
                                             placeholder="e.g., 21.7184" 
                                         />
                                     </div>
@@ -359,7 +356,7 @@ const NgoCreateAlert = () => {
                                     <button 
                                         type="submit" 
                                         disabled={isSubmitting || selectedReportIds.length === 0}
-                                        className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 transition-colors duration-200 flex items-center justify-center"
+                                        className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 flex items-center justify-center"
                                     >
                                         {isSubmitting ? (
                                             <>
@@ -377,6 +374,7 @@ const NgoCreateAlert = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 }
  

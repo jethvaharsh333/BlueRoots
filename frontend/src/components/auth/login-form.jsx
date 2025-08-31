@@ -84,9 +84,15 @@ const LoginForm = () => {
             <div className="w-full mb-3">
                 <Link
                     to="/forgot-password"
-                    className="text-xs font-medium text-slate-800 hover:underline"
+                    className="text-xs font-medium text-slate-800 hover:underline me-2"
                 >
                     Forgot password?
+                </Link>
+                <Link
+                    to="/resend-verification-email"
+                    className="text-xs font-medium text-slate-800 hover:underline"
+                >
+                    Verify Email?
                 </Link>
             </div>
 

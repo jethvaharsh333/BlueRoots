@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
@@ -9,6 +9,8 @@ import {
   FaUsers,
   FaSignOutAlt,
 } from "react-icons/fa";
+import axiosClient from "../../utils/axiosClient";
+import { BACKEND_URL } from "../../constant";
 
 // ✅ Icons
 const DashboardIcon = () => <FaTachometerAlt className="w-5 h-5" />;
@@ -46,6 +48,7 @@ const sidebarItems = [
 ];
 
 const GovtLayout = () => {
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -57,6 +60,21 @@ const GovtLayout = () => {
   if (!role) {
     navigate("/login");
   }
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosClient.get(`${BACKEND_URL}/user/current`);
+        setUser(res.data.data);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        // Don't show error toast as this is background loading
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,10 +131,12 @@ const GovtLayout = () => {
         <motion.div className="p-4 border-t border-gray-100" variants={itemVariants}>
           <motion.div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 mb-3" whileHover={{ scale: 1.02 }}>
             <motion.div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-semibold text-sm">JD</span>
+              <span className="text-white font-semibold text-sm">
+                {user?.username?.charAt(0).toUpperCase() || 'G'}
+              </span>
             </motion.div>
             <div className="flex-1">
-              <p className="font-medium text-gray-900 text-sm">John Doe</p>
+              <p className="font-medium text-gray-900 text-sm">{user?.username || 'Loading...'}</p>
               <p className="text-gray-500 text-xs">{role}</p>
             </div>
           </motion.div>

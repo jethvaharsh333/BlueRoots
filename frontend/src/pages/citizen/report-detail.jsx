@@ -86,8 +86,4 @@ const ReportDetail = () => {
   );
 };
 
-<<<<<<< HEAD
 export default ReportDetail;
-=======
-export default ReportDetail;
->>>>>>> 01448991d2542071fb37bdd226304ba90c44d29b

@@ -33,11 +33,7 @@ const LoginForm = () => {
             setLoading(true);
             const res = await axiosClient.post(BACKEND_URL + "/auth/login", data);
             localStorage.setItem("role", res.data.data.role);
-<<<<<<< HEAD
-            console.log(res);
-=======
             
->>>>>>> 01448991d2542071fb37bdd226304ba90c44d29b
             toast.success(res.data.message);
             const role = res.data.data.role; 
 
@@ -48,10 +44,6 @@ const LoginForm = () => {
             } else if (role === "NGO") {
                 navigate("/ngo/dashboard");
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> 01448991d2542071fb37bdd226304ba90c44d29b
         } catch (err) {
             console.log(err.response);
             toast.error(err.response.data.message);

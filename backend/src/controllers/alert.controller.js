@@ -1,8 +1,11 @@
-import { Alert } from "../models/alert.model";
-import { ApiResponse } from "../utils/ApiResponse";
+import { HTTPSTATUS } from "../config/http.config.js";
+import { Alert } from "../models/alert.model.js";
+import { Report } from "../models/report.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createAlert = async (req, res) => {
   const { title, severity, description, reports: reportIds, longitude, latitude } = req.body;
+  console.log(title, severity, description, reportIds, longitude, latitude);
 
   if (!title || !severity || !description || !reportIds || !longitude || !latitude) {
     return ApiResponse.failure("All fields are required.", HTTPSTATUS.BAD_REQUEST).send(res);
@@ -13,6 +16,8 @@ const createAlert = async (req, res) => {
   }
 
   const reports = await Report.find({ _id: { $in: reportIds }, status: 'VERIFIED' });
+  console.log("reports");
+  console.log(reports);
 
   if (reports.length !== reportIds.length) {
     return ApiResponse.failure("One or more reports are invalid or not yet verified.", HTTPSTATUS.BAD_REQUEST).send(res);

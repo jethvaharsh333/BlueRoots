@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-const NGOLayout = () => {
-    return (  
-        <>
-        NGO LAYOUT
-        </>
-    );
-}
- 
-export default NGOLayout;
-=======
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
@@ -154,4 +143,3 @@ const NgoLayout = () => {
 };
 
 export default NgoLayout;
->>>>>>> 01448991d2542071fb37bdd226304ba90c44d29b

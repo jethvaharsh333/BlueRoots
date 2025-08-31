@@ -44,6 +44,9 @@ app.use("/api/v1/leaderboard", leaderboardRoutes);
 import adminRoutes from "./routes/admin.routes.js";
 app.use("/api/v1/admin", adminRoutes);
 
+import alertRoutes from "./routes/alert.routes.js";
+app.use("/api/v1/alert", alertRoutes);
+
 import { errorHandler } from "./middlewares/error-handler.middleware.js";
 app.use(errorHandler);
 

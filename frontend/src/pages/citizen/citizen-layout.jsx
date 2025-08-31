@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
@@ -12,6 +12,8 @@ import {
   FaBars,
   FaRobot,
 } from "react-icons/fa";
+import axiosClient from "../../utils/axiosClient";
+import { BACKEND_URL } from "../../constant";
 import Profile from './profile';
 
 // Modern Icon Components (using React Icons)
@@ -109,6 +111,7 @@ const logoVariants = {
 
 const CitizenLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -132,6 +135,21 @@ const CitizenLayout = () => {
       navigate("/login");
   }
   const email = localStorage.getItem('email');
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosClient.get(`${BACKEND_URL}/user/current`);
+        setUser(res.data.data);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        // Don't show error toast as this is background loading
+      }
+    };
+
+    fetchUser();
+  }, []);
   
 
   return (
@@ -230,7 +248,7 @@ const CitizenLayout = () => {
       <ProfileIcon />
     </motion.div>
     <div className="flex-1">
-      {/* <p className="font-medium text-gray-900 text-sm">{username}</p> */}
+      <p className="font-medium text-gray-900 text-sm">{user?.username || 'Loading...'}</p>
       <p className="text-gray-500 text-xs">{role}</p>
     </div>
         
@@ -399,7 +417,7 @@ const CitizenLayout = () => {
                       <ProfileIcon />
                     </motion.div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">{email}</p>
+                      <p className="font-medium text-gray-900 text-sm">{user?.username || email}</p>
                       <p className="text-gray-500 text-xs">({role})</p>
                     </div>
                   </motion.div>

@@ -62,7 +62,7 @@ const Reports = () => {
   // Enhanced loading state with skeleton cards
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+      <div className="min-h-screen p-4">
         <div className="w-full max-w-7xl mx-auto">
           {/* Header skeleton */}
           <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl overflow-hidden border border-white/20 mb-8 animate-fadeIn">
@@ -101,7 +101,7 @@ const Reports = () => {
   // Enhanced error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4 flex items-center justify-center">
+      <div className="min-h-screen p-4 flex items-center justify-center">
         <div className="w-full max-w-md bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl overflow-hidden border border-white/20 animate-bounceIn">
           <div className="p-8 text-center">
             <div className="text-6xl mb-4 animate-pulseRing">⚠️</div>

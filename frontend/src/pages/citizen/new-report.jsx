@@ -69,9 +69,9 @@ const NewReport = () => {
         `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
         { method: "POST", body: formData }
       );
-      
+
       if (!uploadRes.ok) throw new Error("Cloudinary upload failed");
-      
+
       const data = await uploadRes.json();
       return data.secure_url;
 
@@ -103,8 +103,8 @@ const NewReport = () => {
     try {
       const uploadedUrls = await handleImageUpload();
 
-      const payload = { 
-        ...formData, 
+      const payload = {
+        ...formData,
         images: uploadedUrls,
         longitude: parseFloat(formData.longitude),
         latitude: parseFloat(formData.latitude)
@@ -125,7 +125,7 @@ const NewReport = () => {
       setFiles([]);
     } catch (error) {
       console.error("Error creating report:", error);
-      
+
       if (error.response) {
         console.error("Server error:", error.response.data);
         toast.error(`Server error: ${error.response.data.message || "Please check your input"}`);
@@ -138,30 +138,30 @@ const NewReport = () => {
       }
     }
   };
-const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-const getCurrentLocation = () => {
-  if (navigator.geolocation) {
-    setIsLoadingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setFormData({
-          ...formData,
-          latitude: position.coords.latitude.toString(),
-          longitude: position.coords.longitude.toString()
-        });
-        setIsLoadingLocation(false);
-        toast.success("Location detected!");
-      },
-      () => {
-        setIsLoadingLocation(false);
-        toast.error("Unable to get location");
-      }
-    );
-  } else {
-    toast.error("Geolocation not supported");
-  }
-};
-  
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      setIsLoadingLocation(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData({
+            ...formData,
+            latitude: position.coords.latitude.toString(),
+            longitude: position.coords.longitude.toString()
+          });
+          setIsLoadingLocation(false);
+          toast.success("Location detected!");
+        },
+        () => {
+          setIsLoadingLocation(false);
+          toast.error("Unable to get location");
+        }
+      );
+    } else {
+      toast.error("Geolocation not supported");
+    }
+  };
+
 
   const selectedCategory = categoryOptions.find(opt => opt.value === formData.category);
   const isFormValid = formData.category && formData.latitude && formData.longitude;
@@ -192,11 +192,10 @@ const getCurrentLocation = () => {
                 {categoryOptions.map((option, index) => (
                   <label
                     key={option.value}
-                    className={`relative cursor-pointer rounded-xl p-4 border-2 transition-all duration-300 hover:scale-102 ${
-                      formData.category === option.value
+                    className={`relative cursor-pointer rounded-xl p-4 border-2 transition-all duration-300 hover:scale-102 ${formData.category === option.value
                         ? 'border-blue-500 bg-blue-50 shadow-lg glow'
                         : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
-                    }`}
+                      }`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <input
@@ -221,59 +220,58 @@ const getCurrentLocation = () => {
             </div>
 
             {/* Location Section */}
-<div className="animate-slideUp animation-delay-200">
-  <label className="block text-sm font-semibold text-gray-700 mb-4">
-    <span className="flex items-center gap-2">
-      📍 Location Coordinates
-    </span>
-  </label>
-  <div className="space-y-3">
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <input
-        type="number"
-        step="any"
-        name="latitude"
-        value={formData.latitude}
-        placeholder="Latitude (use Get Location button)"
-        className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 cursor-not-allowed transition-all outline-none"
-        required
-        readOnly
-      />
-      <input
-        type="number"
-        step="any"
-        name="longitude"
-        value={formData.longitude}
-        placeholder="Longitude (use Get Location button)"
-        className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 cursor-not-allowed transition-all outline-none"
-        required
-        readOnly
-      />
-    </div>
-    <button
-      type="button"
-      onClick={getCurrentLocation}
-      disabled={isLoadingLocation}
-      className={`w-full py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl ${
-        isLoadingLocation
-          ? 'bg-gray-400 cursor-not-allowed'
-          : 'bg-gradient-to-r from-emerald-400 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 hover:scale-102'
-      }`}
-    >
-      {isLoadingLocation ? (
-        <>
-          <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-          Fetching Location...
-        </>
-      ) : (
-        <>
-          🎯 Get Current Location
-        </>
-      )}
-    </button>
-  </div>
-</div>
- 
+            <div className="animate-slideUp animation-delay-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-4">
+                <span className="flex items-center gap-2">
+                  📍 Location Coordinates
+                </span>
+              </label>
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input
+                    type="number"
+                    step="any"
+                    name="latitude"
+                    value={formData.latitude}
+                    placeholder="Latitude (use Get Location button)"
+                    className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 cursor-not-allowed transition-all outline-none"
+                    required
+                    readOnly
+                  />
+                  <input
+                    type="number"
+                    step="any"
+                    name="longitude"
+                    value={formData.longitude}
+                    placeholder="Longitude (use Get Location button)"
+                    className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 cursor-not-allowed transition-all outline-none"
+                    required
+                    readOnly
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={getCurrentLocation}
+                  disabled={isLoadingLocation}
+                  className={`w-full py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl ${isLoadingLocation
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-emerald-400 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 hover:scale-102'
+                    }`}
+                >
+                  {isLoadingLocation ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                      Fetching Location...
+                    </>
+                  ) : (
+                    <>
+                      🎯 Get Current Location
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
             {/* Notes */}
             <div className="animate-slideUp animation-delay-300">
               <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -299,13 +297,12 @@ const getCurrentLocation = () => {
                 </span>
               </label>
               <div
-                className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
-                  dragOver 
-                    ? 'border-blue-500 bg-blue-50 scale-105' 
-                    : files.length > 0 
-                      ? 'border-green-500 bg-green-50' 
+                className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${dragOver
+                    ? 'border-blue-500 bg-blue-50 scale-105'
+                    : files.length > 0
+                      ? 'border-green-500 bg-green-50'
                       : 'border-gray-300 hover:border-gray-400 bg-gray-50'
-                } hover:scale-102`}
+                  } hover:scale-102`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -317,7 +314,7 @@ const getCurrentLocation = () => {
                   onChange={handleFileChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                
+
                 {files.length > 0 ? (
                   <div className="space-y-3 animate-bounceIn">
                     <div className="text-4xl">✅</div>
@@ -364,11 +361,10 @@ const getCurrentLocation = () => {
               <button
                 type="submit"
                 disabled={uploading || !isFormValid}
-                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all relative overflow-hidden ${
-                  uploading || !isFormValid
+                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all relative overflow-hidden ${uploading || !isFormValid
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-gradient-to-r from-blue-600 to-green-600 text-white hover:from-blue-700 hover:to-green-700 shadow-lg hover:shadow-xl hover:scale-102'
-                }`}
+                  }`}
               >
                 {uploading ? (
                   <div className="flex items-center justify-center gap-3">
@@ -380,7 +376,7 @@ const getCurrentLocation = () => {
                     🚀 Submit Report
                   </span>
                 )}
-                
+
                 {/* Shimmer effect for valid form */}
                 {!uploading && isFormValid && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer opacity-30"></div>
@@ -398,11 +394,10 @@ const getCurrentLocation = () => {
                 ].map((step, index) => (
                   <div key={index} className="flex flex-col items-center gap-2">
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center text-lg transition-all duration-300 ${
-                        step.complete 
-                          ? 'bg-green-500 text-white animate-pulseRing shadow-lg' 
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-lg transition-all duration-300 ${step.complete
+                          ? 'bg-green-500 text-white animate-pulseRing shadow-lg'
                           : 'bg-gray-200 text-gray-400'
-                      }`}
+                        }`}
                     >
                       {step.complete ? '✓' : step.icon}
                     </div>

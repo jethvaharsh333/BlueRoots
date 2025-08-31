@@ -12,6 +12,7 @@ import Users from "../pages/government/users";
 import NgoAnalytics from "../pages/ngo/ngo-analytics";
 import NgoCreateAlert from "../pages/ngo/ngo-create-alert";
 import NGODashboard from "../pages/ngo/ngo-dashboard";
+import NgoReports from "../pages/ngo/ngo-reports";
 import NgoSatelliteReports from "../pages/ngo/ngo-satellite-view-reports";
 import NgoVerify from "../pages/ngo/ngo-verify";
 
@@ -32,7 +33,7 @@ export const ngoRoutes = [
     {path:"/ngo/verify", element:<NgoVerify/>},
     {path:"/ngo/analytics",element:<NgoAnalytics/>},
     {path:"/ngo/create-alert",element:<NgoCreateAlert/>},
-    {path:"/ngo/reports",element:<NgoCreateAlert/>},
+    {path:"/ngo/reports",element:<NgoReports/>},
     // { path: "/verify", element: <Verify /> },
     // { path: "/analytics", element: <Analytics /> },
 ];

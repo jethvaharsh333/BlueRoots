@@ -615,8 +615,8 @@ const GovtDashboard = () => {
               <motion.button
                 onClick={toggleAutoRefresh}
                 className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 ${autoRefresh
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05 }}

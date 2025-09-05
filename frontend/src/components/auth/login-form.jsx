@@ -29,11 +29,13 @@ const LoginForm = () => {
     });
 
     const onSubmit = async (data) => {
+        console.log(data);
         try {
             setLoading(true);
+            console.log("api fires as", `${BACKEND_URL}/auth/login`);
             const res = await axiosClient.post(BACKEND_URL + "/auth/login", data);
             localStorage.setItem("role", res.data.data.role);
-            
+            console.log(res);
             toast.success(res.data.message);
             const role = res.data.data.role; 
 

@@ -120,7 +120,7 @@ const GovtAddUser = () => {
             >
               <option value="Citizen">Citizen</option>
               <option value="NGO">NGO</option>
-              <option value="Government">Government</option>
+              {/* <option value="Government">Government</option> */}
             </select>
           </motion.div>
 

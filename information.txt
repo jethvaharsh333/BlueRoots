@@ -55,3 +55,12 @@ Dashboard View
 3. /analytics
 
 4. /create-ngo-user
+
+
+--------------------------
+
+1. GOOGLE SSO
+2. REDUX
+3. AI / Ml
+4. UI [Includes maps, ...]
+https://youtu.be/USOniQb2_bM?si=lhBNAqJiHoDM3Ucn

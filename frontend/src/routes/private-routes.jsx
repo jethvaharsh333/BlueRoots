@@ -25,7 +25,7 @@ export const citizenRoutes = [
     { path: "/reports/:id", element: <ReportDetail /> },
     { path: "/reports/new", element: <NewReport /> },
     { path: "/leaderboard", element: <Leaderboard /> },
-    { path: "/chat-bot", element: <ChatBot /> },
+    // { path: "/chat-bot", element: <ChatBot /> },
 ];
 
 export const ngoRoutes = [

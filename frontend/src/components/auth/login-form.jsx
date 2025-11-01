@@ -4,14 +4,15 @@ import FormField from "../common/form-field";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../../schema/login-schema";
 import { Button } from "../ui/button";
-import { BACKEND_URL } from "../../constant";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import axiosClient from "../../utils/axiosClient";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/auth/authApi";
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
 
     const {
@@ -29,15 +30,14 @@ const LoginForm = () => {
     });
 
     const onSubmit = async (data) => {
-        console.log(data);
+        console.log("ONSUBMIT: "+data);
         try {
             setLoading(true);
-            console.log("api fires as", `${BACKEND_URL}/auth/login`);
-            const res = await axiosClient.post(BACKEND_URL + "/auth/login", data);
-            localStorage.setItem("role", res.data.data.role);
-            console.log(res);
-            toast.success(res.data.message);
-            const role = res.data.data.role; 
+
+            const res = await dispatch(loginUser(data)).unwrap();
+            const role = res.data.role;
+            // const res = await axiosClient.post(BACKEND_URL + "/auth/login", data);
+            toast.success(res.message);
 
             if (role === "CITIZEN") {
                 navigate("/dashboard");
@@ -47,9 +47,10 @@ const LoginForm = () => {
                 navigate("/ngo/dashboard");
             }
         } catch (err) {
-            console.log(err.response);
-            toast.error(err.response.data.message);
-            setError(err.response.data.message);
+            console.log(err);
+            // console.log(err.response);
+            // toast.error(err.response.data.message);
+            // setError(err.response.data.message);
         }
         finally {
             reset();

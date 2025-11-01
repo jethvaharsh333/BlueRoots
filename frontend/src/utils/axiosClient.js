@@ -1,7 +1,9 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { BACKEND_URL } from '../constant';
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.SERVER_URL,
+  baseURL: BACKEND_URL,
   withCredentials: true, // to allow sending cookies
   headers: {
     'Content-Type': 'application/json',
@@ -20,20 +22,20 @@ const publicRoutes = [
   '/resend-verification-email',
 ];
 
-// axiosClient.interceptors.request.use(
-//   (config) => {
-//     const token = Cookies.get("accessToken");
-//     console.log(token); // Log the token for debugging
-
-//     if (token) {
-//       config.headers['Authorization'] = `Bearer ${token}`; // Add token to headers if it exists
-//     } 
-//     return config; // Return the modified config
-//   },
-//   (error) => {
-//     return Promise.reject(error); // Reject the promise if there's an error
-//   }
-// );
+// Request interceptor to add auth token
+axiosClient.interceptors.request.use(
+  (config) => {
+    const token = Cookies.get("accessToken");
+    
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`; // Add token to headers if it exists
+    } 
+    return config; // Return the modified config
+  },
+  (error) => {
+    return Promise.reject(error); // Reject the promise if there's an error
+  }
+);
 
 // Refresh logic on 401 errors
 axiosClient.interceptors.response.use(
@@ -50,7 +52,7 @@ axiosClient.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/auth/generate-access-token`,
+          `${BACKEND_URL}/auth/refresh`,
           {},
           { withCredentials: true }
         );        

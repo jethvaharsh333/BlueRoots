@@ -6,6 +6,7 @@ import VerifyEmail from "../pages/auth/verify-email.jsx"
 import Layout from "../pages/landing/layout.jsx"
 import ResetPassword from "../pages/auth/reset-password.jsx"
 import ResendVerificationEmail from "../pages/auth/resend-verfication-email.jsx"
+import ReduxTest from "../components/test/ReduxTest.jsx"
 
 export const PublicRoutes = [
     {
@@ -39,6 +40,10 @@ export const PublicRoutes = [
     {
         path:'/resend-verification-email',
         element:<ResendVerificationEmail/>
+    },
+    {
+        path: '/redux-test',
+        element: <ReduxTest />
     }
 
 ]
